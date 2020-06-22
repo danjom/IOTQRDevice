@@ -1,0 +1,4 @@
+# Ignore main module and tests
+
+Devices.ino
+AppTest.ino
