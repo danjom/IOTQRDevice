@@ -1,19 +1,17 @@
-const String QRCode = "QRCode.txt=";
+const String CHAR = "\""; 
+const String PAGE = "page ";
+const String FIELDS[] = {"QRCode.txt=", "Symbol.txt=", "Digits.txt="};
 
-void changeCode(String message) {
-  Serial.print(QRCode);
-  Serial.print('"');
-  Serial.print(message);
-  Serial.print('"');
+void changePage(int index) {
+  Serial.print(PAGE + index);
   writeEndBits();
 }
 
-void changePage(int page) {
-  
+void changeData(int block, String data) {
+  Serial.print(FIELDS[block] + CHAR + data + CHAR);
+  writeEndBits();
 }
 
 void writeEndBits() {
-  Serial.write(0xff);
-  Serial.write(0xff);
-  Serial.write(0xff);
+  Serial.print("\xFF\xFF\xFF");
 }
