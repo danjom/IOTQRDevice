@@ -8,6 +8,11 @@ char hexaKeys[ROWS][COLS] = {
   {'4','5','6'},
   {'7','8','9'},
   {'*','0','#'}
+
+  {'1', '2', '3'},
+  {'4', '5', '6'},
+  {'7', '8', '9'},
+  {'*', '0', '#'}
 };
 
 // for ESP32
@@ -16,13 +21,14 @@ byte rowPins[ROWS] = {21, 19, 18, 5}; // connect to the row pinouts of the keypa
 
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
 
-  
-void getKeyPressed(){
-  input = customKeypad.getKey();
-  
-  if (input){
-    //Serial.println(input);
-    state = READY;
+void scanKeypad() {
+  while (appstate != READY) {
+    keyinput = customKeypad.getKey();
+
+    if (keyinput) {
+      //Serial.println(keyinput);
+      appstate = READY;
+    }
+    delay(100); // debounce
   }
-  delay(100); // debounce 
 }
