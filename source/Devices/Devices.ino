@@ -1,15 +1,12 @@
 #include "display.h"
+#include "project.h"
 
 void setup() {
   Serial.begin(9600);
-  
-  while(!Serial.available()) {
-    delay(1000);
-  }
-  runTests();
+  Serial.println("\nSystem Started\n");
 }
 
 
 void loop() {
-  
+  appBegin();
 }

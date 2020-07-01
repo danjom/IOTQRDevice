@@ -1,4 +1,4 @@
-int sleep = 5000;
+//int wtime = 1000; // wait time between delays
 
 void runTests() {
   testDisplay();
@@ -6,24 +6,24 @@ void runTests() {
 
 void testDisplay() {
   changePage(OPTIONS);
-  delay(sleep);
+  delay(wtime);
 
   changePage(PAYMENT);
   changeData(CURRENCY, "CRC");
-  delay(sleep);
+  delay(wtime);
   changeData(DIGITS, "2580.00");
-  delay(sleep);
+  delay(wtime);
 
   changePage(QRIMAGE);
   changeData(QRCODE, "CRC 2580.00");
-  delay(sleep);
+  delay(wtime);
 
   changePage(SUCCESS);
-  delay(sleep);
+  delay(wtime);
 
   changePage(REFUSED);
-  delay(sleep);
+  delay(wtime);
 
   changePage(WARNING);
-  delay(sleep);
+  delay(wtime);
 }

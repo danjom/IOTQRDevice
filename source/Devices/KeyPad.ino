@@ -1,37 +1,28 @@
-/* @file CustomKeypad.pde
-|| @version 1.0
-|| @author Alexander Brevig
-|| @contact alexanderbrevig@gmail.com
-||
-|| @description
-|| | Demonstrates changing the keypad size and key values.
-|| #
-*/
 #include <Keypad.h>
 
-const byte ROWS = 4; //four rows
-const byte COLS = 3; //four columns
-//define the cymbols on the buttons of the keypads
+const byte ROWS = 4;
+const byte COLS = 3;
+
 char hexaKeys[ROWS][COLS] = {
   {'1','2','3'},
   {'4','5','6'},
   {'7','8','9'},
-  {'*','D','#'}
+  {'*','0','#'}
 };
-byte rowPins[ROWS] = {8, 9, 10, 11}; //connect to the row pinouts of the keypad
-byte colPins[COLS] = {2, 3, 4}; //connect to the column pinouts of the keypad
 
-//initialize an instance of class NewKeypad
+// for ESP32
+byte colPins[COLS] = {14, 12, 13}; // connect to the column pinouts of the keypad
+byte rowPins[ROWS] = {21, 19, 18, 5}; // connect to the row pinouts of the keypad
+
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
-
-
-//Serial.begin(9600);
 
   
 void getKeyPressed(){
-  char customKey = customKeypad.getKey();
+  input = customKeypad.getKey();
   
-  if (customKey){
-    Serial.println(customKey);
+  if (input){
+    //Serial.println(input);
+    state = READY;
   }
+  delay(100); // debounce 
 }
