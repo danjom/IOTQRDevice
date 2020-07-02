@@ -1,4 +1,4 @@
-//int wtime = 1000; // wait time between delays
+int wtime = 1000; // wait time between delays
 
 void runTests() {
   //testDisplay();
@@ -62,7 +62,7 @@ void testDigits() {
   Serial.print("Value: ");
   getValue();
   delay(1000);
-  
+
   Serial.println("Deleting 5");
   trimValue();
   delay(1000);

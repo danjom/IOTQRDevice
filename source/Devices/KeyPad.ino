@@ -4,11 +4,6 @@ const byte ROWS = 4;
 const byte COLS = 3;
 
 char hexaKeys[ROWS][COLS] = {
-  {'1','2','3'},
-  {'4','5','6'},
-  {'7','8','9'},
-  {'*','0','#'}
-
   {'1', '2', '3'},
   {'4', '5', '6'},
   {'7', '8', '9'},
@@ -19,15 +14,15 @@ char hexaKeys[ROWS][COLS] = {
 byte colPins[COLS] = {14, 12, 13}; // connect to the column pinouts of the keypad
 byte rowPins[ROWS] = {21, 19, 18, 5}; // connect to the row pinouts of the keypad
 
-Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
+Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS);
 
 void scanKeypad() {
-  while (appstate != READY) {
+  bool pressed = false;
+  while (!pressed) {
     keyinput = customKeypad.getKey();
 
     if (keyinput) {
-      //Serial.println(keyinput);
-      appstate = READY;
+      pressed = true;
     }
     delay(100); // debounce
   }

@@ -1,10 +1,10 @@
 bool isEmpty() {
-  Serial.println(digitval.length() == 0);
+  //Serial.println(digitval.length() == 0);
   return (digitval.length() == 0);
 }
 
 float getValue() {
-  Serial.println(digitval.toFloat());
+  //Serial.println(digitval.toFloat());
   return digitval.toFloat();
 }
 

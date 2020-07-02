@@ -1,9 +1,7 @@
-enum states {READY,   //  key has been pressed
-            SETUP,    //  first configuration
-            MENU,     //  main menu options
-            KEYPAD,   //  waiting for input
-            PURCHASE, //  value entry page
-            REDEEM,   //  redeem entry page
-            HISTORY,  //  view last transactions
-            PROCESS   //  QR display and verification
+enum states {MENU,
+            READY,      //  key has been pressed
+            CONFIG,     //  first configuration
+            PURCHASE,   //  value entry page
+            PROCESS,    //  QR display and verification
+            REDEEM,     //  redeem entry page
             };
