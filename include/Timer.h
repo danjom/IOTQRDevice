@@ -1,12 +1,11 @@
-#include <Arduino.h>
-
-#ifndef Timer_h
-#define Timer_h
+#ifndef TIMER_H
+#define TIMER_H
 
 class Timer {
     public:
+        Timer();
         Timer(unsigned int);
-        boolean check();
+        bool check();
 
     private:
         unsigned long current;
