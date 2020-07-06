@@ -1,5 +1,5 @@
-#ifndef KeyScan_h
-#define KeyScan_h
+#ifndef KEYSCAN_H
+#define KEYSCAN_H
 
 class KeyScan {
     public:
