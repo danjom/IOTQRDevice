@@ -5,6 +5,7 @@
 
 class Digits {
     public:
+<<<<<<< HEAD
         Digits();
         bool isEmpty();
         bool isValid();
@@ -19,6 +20,15 @@ class Digits {
     private:
         String value;
         const char SEPARATOR = '.';
+=======
+    bool isEmpty();
+    bool isDecimal();
+    float getValue();
+    String getField();
+    void trimValue();
+    void addDecimal();
+    void addNumber(char);
+>>>>>>> Keypad and digits logic
 };
 
 #endif
