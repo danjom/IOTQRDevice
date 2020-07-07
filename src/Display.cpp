@@ -1,10 +1,5 @@
 #include <Arduino.h>
 #include <Display.h>
-#include <string>
-
-const String CHAR = "\""; 
-const String PAGE = "page ";
-const String FIELDS[] = {"QRCode.txt=", "Symbol.txt=", "Digits.txt="};
 
 void Display::changePage(int index) {
     Serial.print(PAGE + index);
