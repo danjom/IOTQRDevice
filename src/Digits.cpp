@@ -2,12 +2,17 @@
 #include <KeyScan.h>
 #include <Digits.h>
 
-const char SEPARATOR = '.';
 
-String value = "";
+Digits::Digits() {
+    value = "";
+}
 
 bool Digits::isEmpty() {
     return (value.length() == 0);
+}
+
+bool Digits::isValid() {
+    return (this->getValue() >= 1);
 }
 
 bool Digits::isDecimal() {
@@ -32,4 +37,8 @@ void Digits::addDecimal() {
 
 void Digits::trimValue() {
     value = value.substring(0, value.length()-1);
+}
+
+void Digits::clearValue() {
+    value = "";
 }
