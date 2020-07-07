@@ -5,13 +5,20 @@
 
 class Digits {
     public:
-    bool isEmpty();
-    bool isDecimal();
-    float getValue();
-    String getField();
-    void trimValue();
-    void addDecimal();
-    void addNumber(char);
+        Digits();
+        bool isEmpty();
+        bool isValid();
+        bool isDecimal();
+        float getValue();
+        String getField();
+        void trimValue();
+        void clearValue();
+        void addDecimal();
+        void addNumber(char);
+
+    private:
+        String value;
+        const char SEPARATOR = '.';
 };
 
 #endif
