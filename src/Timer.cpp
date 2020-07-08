@@ -1,22 +1,18 @@
 #include <Arduino.h>
 #include <Timer.h>
 
-unsigned long current;
-unsigned long previous;
-unsigned int timing;
-
-Timer::Timer() {
-    
+Timer::Timer(unsigned int time) {
+    interval = time;
 }
 
-Timer::Timer(unsigned int interval) {
-    timing = interval;
+void Timer::setTimer(unsigned int time) {
+    interval = time;
 }
 
 bool Timer::check() {
     current = millis();
 
-    if ((current - previous) >= timing) {
+    if ((current - previous) >= interval) {
         previous = current;
         return true;
     }
