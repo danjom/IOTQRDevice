@@ -3,15 +3,16 @@
 
 class Timer {
     public:
-        Timer();
+        Timer() = default;
         Timer(unsigned int);
         bool check();
+        void reset();
+        void setTimer(unsigned int);
 
     private:
         unsigned long current;
         unsigned long previous;
-        unsigned int timing;
-
+        unsigned int interval;
 };
 
 #endif
