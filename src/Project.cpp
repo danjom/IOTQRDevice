@@ -2,11 +2,13 @@
 
 void Project::begin() {
     Serial.begin(9600);
-    Serial.println("\nProgram Started\n");
+    printer.toSerialNL("\n\nProgram Started");
 
     blinker.begin();
-    blinker.setColor(BLUE);
+    blinker.setColor(ORANGE);
     blinker.setLevel(125);
     blinker.display();
     blinker.turnLedOn();
+
+    scanner.setDebounceTime(100);
 }

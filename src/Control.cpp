@@ -1,75 +1,108 @@
 #include <Control.h>
+#include <Project.h>
 
-bool alert = false;
-
-Control::Control() {
-    
-}
+const char ONE = '1';
+const char TWO = '2';
+const char THREE = '3';
 
 void Control::begin() {
-    display = Display();
-    scanner = KeyScan();
-    scanner.setDebounceTime(100);
-    // blinker.begin();
-    // blinker.setColor(WHITE);
-    // blinker.setLevel(80);
-    // blinker.display();
-    // blinker.turnLedOn();
+    state = MENU;
+    printer.toSerialNL("Control started");
 }
 
 void Control::check() {
-    if (alert) {
-        blinker.blinkD(125, 125);
-        if (blinker.getCounter() > 2) {
-            alert = false;
-            blinker.setColor(WHITE);
-            blinker.display();
-            blinker.reset();
-        }
+    switch (state) {
+        case MENU:
+            printer.toSerialNL("Waiting for key");
+            state = SCAN;
+            break;
+
+        case SCAN:
+            getKey();
+            break;
+        
+        case SELECT:
+            select();
+            break;
+
+        default:
+            break;
     }
-    getKey();
 }
+
+    // if (alert) {
+    //     blinker.blinkD(125, 125);
+    //     if (blinker.getCounter() > 2) {
+    //         alert = false;
+    //         blinker.setColor(WHITE);
+    //         blinker.display();
+    //         blinker.reset();
+    //     }
+    // }
+    // getKey();
 
 void Control::getKey() {
     input = scanner.getKey();
 
     if (input) {
-        select();
+        printer.toSerialSL("Input is: ");
+        printer.toSerialNL(String(input));
+        state = SELECT;
     }
 }
 
 void Control::select() {
-    if (input == '*') {
-        if (digits.isEmpty()) {
-            Serial.println("Switching previous screen");
-        }
-        else {
-            digits.trimValue();
-        }
+    switch (input) {
+        case ONE:
+
+            break;
+
+        case TWO:
+
+            break;
+
+        case THREE:
+
+            break;
+        
+        default:
+            state = SCAN;
+            printer.toSerialNL("Invalid option");
     }
-    else if (input == '#') {
-        if (digits.isEmpty()) {
-            Serial.println("[LED] Digits field is empty");
-            alert = true;
-            blinker.turnLedOff();
-            blinker.setColor(RED);
-        }
-        else if (!digits.isValid()) {  
-            Serial.println("[LED] Digits field is less than 1");
-            digits.clearValue();
-        }
-        else {
-            if (digits.isDecimal()) {
-                Serial.println("Processing payment for USD " + String(digits.getValue()));
-            }
-            else {
-                digits.addDecimal();
-            }
-        }
-    }
-    else {
-        digits.addNumber(input);
-    }
-    Serial.print("Field is: ");
-    Serial.println(digits.getField());
 }
+
+// void Control::select() {
+//     if (input == '*') {
+//         if (digits.isEmpty()) {
+//             Serial.println("Switching previous screen");
+//         }
+//         else {
+//             digits.trimValue();
+//         }
+//     }
+//     else if (input == '#') {
+//         if (digits.isEmpty()) {
+//             Serial.println("[LED] Digits field is empty");
+//             alert = true;
+//             blinker.turnLedOff();
+//             blinker.setColor(RED);
+//         }
+//         else if (!digits.isValid()) {  
+//             Serial.println("[LED] Digits field is less than 1");
+//             digits.clearValue();
+//         }
+//         else {
+//             if (digits.isDecimal()) {
+//                 Serial.println("Processing payment for USD " + String(digits.getValue()));
+//             }
+//             else {
+//                 digits.addDecimal();
+//             }
+//         }
+//     }
+//     else {
+//         digits.addNumber(input);
+//     }
+//     Serial.print("Field is: ");
+//     Serial.println(digits.getField());
+// }

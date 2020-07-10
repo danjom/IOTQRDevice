@@ -10,14 +10,14 @@ extern Blinker blinker;
 
 class Control {
     public:
-        Control();
+        Control() = default;
         void begin();
         void check();
         void getKey();
         void select();
 
-        
     private:
+        int state;
         char input;
         Digits digits;
         Display display;
