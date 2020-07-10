@@ -6,14 +6,16 @@ const char TWO = '2';
 const char THREE = '3';
 
 void Control::begin() {
-    state = MENU;
     printer.toSerialNL("Control started");
+    state = MENU;
 }
 
 void Control::check() {
     switch (state) {
         case MENU:
             printer.toSerialNL("Waiting for key");
+            signal.display(READY);
+            display.changePage(OPTIONS);
             state = SCAN;
             break;
 
@@ -30,17 +32,6 @@ void Control::check() {
     }
 }
 
-    // if (alert) {
-    //     blinker.blinkD(125, 125);
-    //     if (blinker.getCounter() > 2) {
-    //         alert = false;
-    //         blinker.setColor(WHITE);
-    //         blinker.display();
-    //         blinker.reset();
-    //     }
-    // }
-    // getKey();
-
 void Control::getKey() {
     input = scanner.getKey();
 
@@ -54,19 +45,27 @@ void Control::getKey() {
 void Control::select() {
     switch (input) {
         case ONE:
-
+            display.changePage(PAYMENT);
+            delay(3000);
+            state = MENU;
             break;
 
         case TWO:
-
+            display.changePage(QRIMAGE);
+            delay(3000);
+            state = MENU;
             break;
 
         case THREE:
-
+            display.changePage(HISTORY);
+            delay(3000);
+            state = MENU;
             break;
         
         default:
             state = SCAN;
+            signal.display(WRONG);
+            signal.display(READY);
             printer.toSerialNL("Invalid option");
     }
 }

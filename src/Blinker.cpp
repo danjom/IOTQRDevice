@@ -30,20 +30,19 @@ void Blinker::blink() {
             turnLedOn();
             ledState = HIGH;
             ledTimerOn.reset();
+            counter++;
     }
 }
 
-void Blinker::blink(int repetitions) {
-    if (counter <= repetitions) {
-        this->blink();
+void Blinker::strobe(uint32_t time) {
+    reset();
+    while (counter < 3) {
+        turnLedOff();
+        delay(time);
+        turnLedOn();
+        delay(time);
+        counter++;
     }
-}
-
-void Blinker::blinkD(unsigned long on, unsigned long off) {
-    turnLedOn();
-    delay(on);
-    turnLedOff();
-    delay(off);
 }
 
 void Blinker::turnLedOn() {

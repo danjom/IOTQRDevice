@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Blinker.h>
+#include <Signals.h>
 #include <Display.h>
 #include <KeyScan.h>
 #include <Printer.h>
@@ -12,6 +13,7 @@ extern Blinker blinker;
 extern Display display;
 extern KeyScan scanner;
 extern Printer printer;
+extern Signals signal;
 
 class Project {
     public:

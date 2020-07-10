@@ -13,13 +13,12 @@ class Blinker {
         void begin();
         void reset();
         void blink();
-        void blink(int);
-        void blinkD(unsigned long, unsigned long);
         void display();
-        void setColor(uint32_t);
-        void setLevel(uint8_t);
         void turnLedOn();
         void turnLedOff();
+        void strobe(uint32_t);
+        void setColor(uint32_t);
+        void setLevel(uint8_t);
         int getCounter();
 
     private:

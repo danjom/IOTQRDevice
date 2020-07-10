@@ -3,9 +3,6 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-enum GUI_BLOCKS {QRCODE, SYMBOL, DIGITS};
-enum GUI_PAGES {OPTIONS, PAYMENT, QRPAGE, SUCCESS, REFUSED, WARNING};
-
 class Display {
     public:
         void changePage(int);
