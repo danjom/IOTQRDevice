@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <Display.h>
-#include <string>
 
 const String CHAR = "\""; 
 const String PAGE = "page ";

@@ -13,10 +13,13 @@ class Blinker {
         void begin();
         void reset();
         void blink();
-        void blink(int);
         void display();
+        void turnLedOn();
+        void turnLedOff();
+        void strobe(uint32_t);
         void setColor(uint32_t);
         void setLevel(uint8_t);
+        int getCounter();
 
     private:
         Adafruit_NeoPixel pixel;
@@ -28,9 +31,6 @@ class Blinker {
         uint32_t ledColor;
         static const uint16_t LED_INDEX = 0; 
         static const uint16_t LED_COUNT = 1;
-
-        void turnLedOn();
-        void turnLedOff();
 };
 
 #endif

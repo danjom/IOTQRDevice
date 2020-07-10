@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <Blinker.h>
 
 Blinker::Blinker(uint16_t LED_PIN, unsigned long timeLedOn, unsigned long timeLedOff) {
@@ -29,12 +30,18 @@ void Blinker::blink() {
             turnLedOn();
             ledState = HIGH;
             ledTimerOn.reset();
+            counter++;
     }
 }
 
-void Blinker::blink(int repetitions) {
-    if (counter <= repetitions) {
-        this->blink();
+void Blinker::strobe(uint32_t time) {
+    reset();
+    while (counter < 3) {
+        turnLedOff();
+        delay(time);
+        turnLedOn();
+        delay(time);
+        counter++;
     }
 }
 
@@ -62,4 +69,8 @@ void Blinker::setColor(uint32_t color) {
 void Blinker::setLevel(uint8_t level) {
     pixel.setBrightness(level);
     ledLevel = level;
+}
+
+int Blinker::getCounter() {
+    return counter;
 }
