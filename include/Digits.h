@@ -18,7 +18,7 @@ class Digits {
 
     private:
         String value;
-        const char SEPARATOR = '.';
+        char SEPARATOR;
 };
 
 #endif

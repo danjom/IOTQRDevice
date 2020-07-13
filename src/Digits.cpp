@@ -5,6 +5,7 @@
 
 Digits::Digits() {
     value = "";
+    SEPARATOR  = '.';
 }
 
 bool Digits::isEmpty() {

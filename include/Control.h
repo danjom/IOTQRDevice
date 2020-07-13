@@ -1,12 +1,9 @@
-#include <Display.h>
-#include <KeyScan.h>
-#include <Digits.h>
-#include <Blinker.h>
+#include <Payment.h>
 
 #ifndef CONTROL_H
 #define CONTROL_H
 
-extern Blinker blinker;
+extern Payment payment;
 
 class Control {
     public:
@@ -17,11 +14,7 @@ class Control {
         void select();
 
     private:
-        int state;
         char input;
-        Digits digits;
-        Display display;
-        KeyScan scanner;
 };
 
 #endif

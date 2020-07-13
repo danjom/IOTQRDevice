@@ -1,5 +1,6 @@
 #include <Control.h>
 #include <Project.h>
+#include <Options.h>
 
 const char ONE = '1';
 const char TWO = '2';
@@ -9,6 +10,7 @@ void Control::begin() {
     printer.toSerialNL("Control started");
     state = MENU;
 }
+
 
 void Control::check() {
     switch (state) {
@@ -27,7 +29,12 @@ void Control::check() {
             select();
             break;
 
-        default:
+        case EVENT:
+            payment.check();
+            break;
+
+        case DONE:
+            state = MENU;
             break;
     }
 }
@@ -43,23 +50,20 @@ void Control::getKey() {
 }
 
 void Control::select() {
+    state = EVENT;
     switch (input) {
         case ONE:
             display.changePage(PAYMENT);
-            delay(3000);
-            state = MENU;
+            display.changeData(SYMBOL, currency);
+            event = PAYMENT;
             break;
 
         case TWO:
-            display.changePage(QRIMAGE);
-            delay(3000);
-            state = MENU;
+            event = REDEEM;
             break;
 
         case THREE:
-            display.changePage(HISTORY);
-            delay(3000);
-            state = MENU;
+            event = HISTORY;
             break;
         
         default:
@@ -69,39 +73,3 @@ void Control::select() {
             printer.toSerialNL("Invalid option");
     }
 }
-
-// void Control::select() {
-//     if (input == '*') {
-//         if (digits.isEmpty()) {
-//             Serial.println("Switching previous screen");
-//         }
-//         else {
-//             digits.trimValue();
-//         }
-//     }
-//     else if (input == '#') {
-//         if (digits.isEmpty()) {
-//             Serial.println("[LED] Digits field is empty");
-//             alert = true;
-//             blinker.turnLedOff();
-//             blinker.setColor(RED);
-//         }
-//         else if (!digits.isValid()) {  
-//             Serial.println("[LED] Digits field is less than 1");
-//             digits.clearValue();
-//         }
-//         else {
-//             if (digits.isDecimal()) {
-//                 Serial.println("Processing payment for USD " + String(digits.getValue()));
-//             }
-//             else {
-//                 digits.addDecimal();
-//             }
-//         }
-//     }
-//     else {
-//         digits.addNumber(input);
-//     }
-//     Serial.print("Field is: ");
-//     Serial.println(digits.getField());
-// }
