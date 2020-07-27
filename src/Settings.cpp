@@ -6,24 +6,20 @@ Settings::Settings() {
 
 void Settings::begin() {
     storage.begin();
-    firstBoot();
-    checkState();
-}
 
-void Settings::firstBoot() {
-    String reading = storage.read(RUN_PATH);
-
-    if (reading.length() > 0) {
-        state = states[reading.toInt()];
-    }
-    else {
-        // first boot
+    if (DEVICE_RESET) {
         storage.write(RUN_PATH, String(RESET));
         restartDevice();
+    }
+    else {
+        checkState();
     }
 }
 
 void Settings::checkState() {
+    String reading = storage.read(RUN_PATH);
+    state = states[reading.toInt()];
+
     switch (state) {
     case RESET:
         printer.toSerialNL("Run level: RESET");
@@ -36,6 +32,7 @@ void Settings::checkState() {
         break;
 
     case NETWORK:
+        setSettings();
         printer.toSerialNL("Run level: NETWORK");
         break;
     default:
@@ -45,7 +42,7 @@ void Settings::checkState() {
 }
 
 void Settings::setPassword() {
-    network.startServer();
+    network.startServer(password);
     network.setupServer();
 
     while (state == LOGIN) {
@@ -58,6 +55,12 @@ void Settings::setPassword() {
         }
         delay(5000);
     }
+}
+
+void Settings::setSettings() {
+    readPassword();
+    network.startServer(password);
+    network.setupServer();
 }
 
 void Settings::readPassword() {

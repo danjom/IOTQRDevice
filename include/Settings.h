@@ -6,23 +6,26 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+extern bool DEVICE_RESET;
+
 class Settings {
     public:
         Settings();
         void begin();
-        void firstBoot();
         void checkState();
-        void resetDevice();
+
         void readPassword();
         void readSettings();
         void setPassword();
         void setSettings();
-        void writePassword(String pass);
-        void writeSettings();
+        
         void clearPassword();
         void clearSettings();
         void resetSettings();
         void restartDevice();
+
+        void writePassword(String pass);
+        void writeSettings();
     private:
         void checkReading(String msg);
         

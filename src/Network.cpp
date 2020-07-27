@@ -11,12 +11,7 @@ AsyncWebServer server(80);
 DNSServer dns;
 HTTPClient http;
 
-void Network::setupNetwork(String ssid, String password) {
-    WiFiName = ssid;
-    WiFiPass = password;
-}
-
-void Network::setupDevice(String devicexd, String apikey, String currency, 
+void Network::setupClient(String devicexd, String apikey, String currency, 
                         String language, uint8_t version) {    
     apiDeviceXd = devicexd;
     apiAuthKey = apikey;
@@ -48,15 +43,19 @@ void Network::startClient() {
     }
 }
 
-void Network::startServer() {
+void Network::startServer(String password) {
     printer.toSerialNL("Setting Access Point . . .");
-    WiFi.softAP(device.c_str(), NULL);
+    WiFi.softAP(device.c_str(), password.c_str());
 
     IPAddress IP = WiFi.softAPIP();
     printer.toSerialSL("AP IP address: ");
     printer.toSerialNL(IP.toString());
 
     dns.start (53, "*", WiFi.softAPIP() );
+}
+
+void Network::setupCommon() {
+
 }
 
 void Network::setupServer() {
@@ -90,6 +89,10 @@ void Network::setupServer() {
     });
     server.begin();
     printer.toSerialNL("Server is running");
+}
+
+void Network::setupDevice() {
+
 }
 
 void Network::checkStatus() {

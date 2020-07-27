@@ -8,13 +8,14 @@
 class Network {
     public:
         Network() = default;
-        void setupNetwork(String ssid, String password);
-        void setupDevice(String deviceId, String apikey, String currency, 
+        void setupClient(String deviceId, String apikey, String currency, 
                         String language, uint8_t version);
         
-        void startClient();
-        void startServer();
+        void startServer(String password);
+        void setupCommon();
         void setupServer();
+        void setupDevice();
+        void startClient();
         void checkStatus();
         void setTimeout(int time);
 
