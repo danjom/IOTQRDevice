@@ -1,14 +1,17 @@
+#include <Project.h>
 #include <Display.h>
 #include <KeyScan.h>
-#include <Digits.h>
-#include <Blinker.h>
+#include <Signals.h>
 
 #ifndef CONTROL_H
 #define CONTROL_H
 
-extern Blinker blinker;
+extern Display display;
+extern KeyScan scanner;
+extern Signals signal;
 
 class Control {
+    enum options {MENU, SCAN, SELECT};
     public:
         Control() = default;
         void begin();
@@ -19,9 +22,6 @@ class Control {
     private:
         int state;
         char input;
-        Digits digits;
-        Display display;
-        KeyScan scanner;
 };
 
 #endif

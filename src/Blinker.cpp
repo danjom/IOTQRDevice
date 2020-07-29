@@ -1,14 +1,10 @@
 #include <Arduino.h>
 #include <Blinker.h>
 
-Blinker::Blinker(uint16_t LED_PIN, unsigned long timeLedOn, unsigned long timeLedOff) {
+void Blinker::begin(uint16_t LED_PIN, unsigned long timeLedOn, unsigned long timeLedOff) {
     pixel = Adafruit_NeoPixel(LED_COUNT, LED_PIN, NEO_RGB + NEO_KHZ800);
     ledTimerOn = Timer(timeLedOn);
     ledTimerOff = Timer(timeLedOff);
-    ledState = HIGH;
-}
-
-void Blinker::begin() {
     pixel.begin();
 }
 

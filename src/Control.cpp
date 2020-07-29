@@ -1,5 +1,4 @@
 #include <Control.h>
-#include <Project.h>
 
 const char ONE = '1';
 const char TWO = '2';
@@ -7,6 +6,7 @@ const char THREE = '3';
 
 void Control::begin() {
     printer.toSerialNL("Control started");
+    signal.display(READY);
     state = MENU;
 }
 

@@ -1,24 +1,25 @@
+// #include <Arduino.h>
+// #include <Blinker.h>
+// #include <Signals.h>
+// #include <Display.h>
+// #include <KeyScan.h>
+// #include <Printer.h>
+// #include <Options.h>
 #include <Arduino.h>
-#include <Blinker.h>
-#include <Signals.h>
-#include <Display.h>
-#include <KeyScan.h>
 #include <Printer.h>
-#include <Options.h>
 
 #ifndef PROJECT_H
 #define PROJECT_H
 
-extern Blinker blinker;
-extern Display display;
-extern KeyScan scanner;
-extern Printer printer;
-extern Signals signal;
+enum class Status {CONFIG, MENU, PAYMENT};
 
-class Project {
-    public:
-        Project() = default;
-        void begin();
-};
+extern Status progress;
+extern Printer printer;
+
+// extern Blinker blinker;
+// extern Display display;
+// extern KeyScan scanner;
+// extern Printer printer;
+// extern Signals signal;
 
 #endif
