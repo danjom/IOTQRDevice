@@ -54,10 +54,6 @@ void Network::startServer(String password) {
     dns.start (53, "*", WiFi.softAPIP() );
 }
 
-void Network::setupCommon() {
-
-}
-
 void Network::setupServer() {
     String input = "";
     
@@ -92,7 +88,41 @@ void Network::setupServer() {
 }
 
 void Network::setupDevice() {
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+        request->send(SPIFFS, "/setup.html", "text/html");
+    });
 
+    server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request){
+        request->send(SPIFFS, "/style.css", "text/css");
+    });
+
+    server.on("/fonts.css", HTTP_GET, [](AsyncWebServerRequest *request){
+        request->send(SPIFFS, "/fonts.css", "text/css");
+    });
+
+    server.on("/get", HTTP_GET, [&] (AsyncWebServerRequest *request) {
+        int inputCount = request->params();
+        printer.toSerialNL(String(inputCount));
+
+        for(int i = 0; i < inputCount; i++) {
+        
+            AsyncWebParameter* p = request->getParam(i);
+        
+            printer.toSerialNL("Param name: " + p->name());
+            printer.toSerialNL("Param value: " + p->value());
+        
+            printer.toSerialSL("------");
+        }
+
+        server.end();
+        printer.toSerialNL("Server closed");
+        WiFi.disconnect();
+        printer.toSerialNL("Hotspot closed");
+
+    });
+    
+    server.begin();
+    printer.toSerialNL("Server is running");
 }
 
 void Network::checkStatus() {

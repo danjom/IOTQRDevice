@@ -36,12 +36,6 @@ class Settings {
         
         Memory storage;
         String password;
-        String wifissid;
-        String devicexd;
-        String apiauth;
-        String currency;
-        String language;
-        String version;
 
         const byte EEPROM_SIZE = 1;
         const byte STATE_STORE = 0;

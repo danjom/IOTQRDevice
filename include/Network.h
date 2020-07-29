@@ -12,7 +12,6 @@ class Network {
                         String language, uint8_t version);
         
         void startServer(String password);
-        void setupCommon();
         void setupServer();
         void setupDevice();
         void startClient();

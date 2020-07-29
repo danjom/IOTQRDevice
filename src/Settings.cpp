@@ -9,7 +9,7 @@ void Settings::begin() {
 
     if (DEVICE_RESET) {
         storage.write(RUN_PATH, String(RESET));
-        restartDevice();
+        printer.toSerialNL("Restart device manually");
     }
     else {
         checkState();
@@ -32,9 +32,10 @@ void Settings::checkState() {
         break;
 
     case NETWORK:
-        setSettings();
         printer.toSerialNL("Run level: NETWORK");
+        setSettings();
         break;
+
     default:
         printer.toSerialNL("Wrong reading from state");
         break;
@@ -42,7 +43,7 @@ void Settings::checkState() {
 }
 
 void Settings::setPassword() {
-    network.startServer(password);
+    network.startServer("");
     network.setupServer();
 
     while (state == LOGIN) {
@@ -60,7 +61,7 @@ void Settings::setPassword() {
 void Settings::setSettings() {
     readPassword();
     network.startServer(password);
-    network.setupServer();
+    network.setupDevice();
 }
 
 void Settings::readPassword() {

@@ -22,7 +22,7 @@ void loop() {
 }
 
 void start() {
-  delay(5000);
+  delay(3000);
   Serial.begin(9600);
   printer.toSerialNL("\nProgram Started\n");
 }
