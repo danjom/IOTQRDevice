@@ -8,7 +8,6 @@
 class Blinker {
     public:
         Blinker() = default;
-        Blinker(uint16_t, unsigned long, unsigned long);
         void setTimers(unsigned long, unsigned long);
         void begin(uint16_t, unsigned long, unsigned long);
         void reset();
@@ -32,7 +31,7 @@ class Blinker {
 
         uint8_t ledLevel;
         uint32_t ledColor;
-        
+
         static const uint16_t LED_INDEX = 0; 
         static const uint16_t LED_COUNT = 1;
 };
