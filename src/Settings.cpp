@@ -36,6 +36,11 @@ void Settings::checkState() {
         setSettings();
         break;
 
+    case VERIFY:
+        printer.toSerialNL("Run level: VERIFY");
+        readSettings();
+        break;
+
     default:
         printer.toSerialNL("Wrong reading from state");
         break;
@@ -62,6 +67,18 @@ void Settings::setSettings() {
     readPassword();
     network.startServer(password);
     network.setupDevice();
+
+    while (state == NETWORK) {
+        settings = network.getSettings();
+
+        if (settings.length() > 0) {
+            writeSettings(settings);
+            storage.write(RUN_PATH, String(VERIFY));
+            restartDevice();
+        }
+        delay(5000);
+    }
+    readSettings();
 }
 
 void Settings::readPassword() {
@@ -77,13 +94,26 @@ void Settings::readPassword() {
 }
 
 void Settings::readSettings() {
-    String variables[5];
+    String variables[8];
     String reading = storage.read(CFG_PATH);
-    uint8_t index = reading.indexOf(SEPARATOR);
+    uint8_t charIndex = 0;
 
     if (reading.length() > 0) {
         printer.toSerialNL("Network settings found");
-        reading = reading.substring(0, index);
+
+        for (int index = 0; index < 8; index++) {
+            charIndex = reading.indexOf(SEPARATOR);
+            // printer.toSerialNL(String("Reading: " + reading));
+            // printer.toSerialNL(String("Char ix: " + String(charIndex)));
+            variables[index] = reading.substring(0, charIndex);
+            reading.remove(0, charIndex + 1);
+            printer.toSerialNL(String("Var at " + String(index) + ": " + variables[index]));
+        }
+    params.saveSettings(variables);
+    network.setTimeout(10000);
+    network.setupClient();
+    network.startClient();
+    network.checkStatus();
     }
     else {
         printer.toSerialNL("Network settings not found");
@@ -94,8 +124,8 @@ void Settings::writePassword(String pass) {
     storage.write(PWD_PATH, pass);
 }
 
-void Settings::writeSettings() {
-
+void Settings::writeSettings(String sets) {
+    storage.write(CFG_PATH, sets);
 }
 
 void Settings::clearPassword() {

@@ -1,11 +1,13 @@
-#include <Arduino.h>
 #include <Common.h>
 #include <Memory.h>
 #include <Network.h>
+#include <APIData.h>
 
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+extern APIData params;
+extern Network network;
 extern bool DEVICE_RESET;
 
 class Settings {
@@ -25,7 +27,8 @@ class Settings {
         void restartDevice();
 
         void writePassword(String pass);
-        void writeSettings();
+        void writeSettings(String sets);
+
     private:
         void checkReading(String msg);
         
@@ -36,6 +39,7 @@ class Settings {
         
         Memory storage;
         String password;
+        String settings;
 
         const byte EEPROM_SIZE = 1;
         const byte STATE_STORE = 0;

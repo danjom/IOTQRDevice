@@ -1,6 +1,4 @@
-#include <Common.h>
 #include <Network.h>
-#include <Memory.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <ESPAsyncWebServer.h>
@@ -11,19 +9,15 @@ AsyncWebServer server(80);
 DNSServer dns;
 HTTPClient http;
 
-void Network::setupClient(String devicexd, String apikey, String currency, 
-                        String language, uint8_t version) {    
-    apiDeviceXd = devicexd;
-    apiAuthKey = apikey;
-    apiCurrency = currency;
-    apiLanguage = language;
-    apiVersion = version;
+void Network::setupClient() {
+    netData = params.getWiFiData();
+    apiData = params.getAuthData();
 }
 
 void Network::startClient() {
     IPAddress ip;
 
-    WiFi.begin(WiFiName.c_str(), WiFiPass.c_str());
+    WiFi.begin(netData[0].c_str(), netData[1].c_str());
     printer.toSerialSL("\nConnecting ");
     while(WiFi.status() != WL_CONNECTED) {
         delay(500);
@@ -112,13 +106,16 @@ void Network::setupDevice() {
             printer.toSerialNL("Param value: " + p->value());
         
             printer.toSerialSL("------");
-        }
 
+            settings.concat(p->value());
+            settings.concat(',');
+        }
+        settings.remove(settings.lastIndexOf(','), 1);
+        printer.toSerialNL(String("Settings: " + settings));
         server.end();
         printer.toSerialNL("Server closed");
         WiFi.disconnect();
         printer.toSerialNL("Hotspot closed");
-
     });
     
     server.begin();
@@ -126,7 +123,8 @@ void Network::setupDevice() {
 }
 
 void Network::checkStatus() {
-    String request = String(SERVER_URL + SERVER_API + apiVersion + API_CHECKER);
+    String request = String(SERVER_URL + SERVER_API + apiData[VERSION] + API_CHECKER);
+    printer.toSerialNL(request);
 
     if(WiFi.status()== WL_CONNECTED){
         http.begin(request.c_str());
@@ -154,9 +152,9 @@ void Network::checkStatus() {
 void Network::addHeaders() {
     http.addHeader("Accept", APPLICATION);
     http.addHeader("Content-Type", APPLICATION);
-    http.addHeader("X-Api-Key", apiAuthKey);
-    http.addHeader("X-Discrim", apiDeviceXd);
-    http.addHeader("Accept-Language", apiLanguage);
+    http.addHeader("X-Api-Key", apiData[APILOGIN]);
+    http.addHeader("X-Discrim", apiData[GROUPXDS]);
+    http.addHeader("Accept-Language", apiData[LANGUAGE]);
 }
 
 void Network::setTimeout(int time) {

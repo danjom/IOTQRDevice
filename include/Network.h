@@ -1,46 +1,40 @@
-#include <Arduino.h>
+#include <Common.h>
 #include <Timer.h>
-#include <SPIFFS.h>
+#include <APIData.h>
 
 #ifndef NETWORK_H
 #define NETWORK_H
 
+extern APIData params;
+
 class Network {
     public:
         Network() = default;
-        void setupClient(String deviceId, String apikey, String currency, 
-                        String language, uint8_t version);
-        
         void startServer(String password);
+        void setTimeout(int time);
         void setupServer();
         void setupDevice();
+        void setupClient(); 
         void startClient();
         void checkStatus();
-        void setTimeout(int time);
 
         String getPassword();
         String getSettings();
-    
+
     private:
         void addHeaders();
 
-        int timeout;
-
         Timer timer;
-
         String password;
         String settings;
-        String WiFiName;
-        String WiFiPass;
 
-        String apiVersion;
-        String apiAuthKey;
-        String apiDeviceId;
-        String apiDeviceXd;
-        String apiCurrency;
-        String apiLanguage;
-        
+        String *netData;
+        String *apiData;
+    
         String device = "POS Device";
+
+        int timeout;
+
         const String SERVER_URL = "https://yoy-valid8api.azurewebsites.net";
         const String SERVER_API = "/api/v";
         const String API_CHECKER = "/statuschecker/get";

@@ -2,6 +2,7 @@
 #include <Common.h>
 #include <Settings.h>
 #include <Network.h>
+#include <APIData.h>
 
 bool SERIAL_DEBUG = true;
 bool DEVICE_RESET = false;
@@ -9,6 +10,8 @@ bool DEVICE_RESET = false;
 Printer printer = Printer();
 Network network = Network();
 Settings settings = Settings();
+APIData params = APIData();
+
 
 void start();
 

@@ -4,12 +4,11 @@
 #include <Display.h>
 #include <KeyScan.h>
 #include <Printer.h>
-#include <Network.h>
+#include <SPIFFS.h>
 
 #ifndef COMMON_H
 #define COMMON_H
 
 extern Printer printer;
-extern Network network;
 
 #endif
