@@ -2,6 +2,7 @@
 #include <Display.h>
 #include <KeyScan.h>
 #include <Signals.h>
+#include <Payment.h>
 
 #ifndef CONTROL_H
 #define CONTROL_H
@@ -22,6 +23,8 @@ class Control {
     private:
         int state;
         char input;
+
+        Payment payment;
 };
 
 #endif

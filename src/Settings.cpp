@@ -103,17 +103,16 @@ void Settings::readSettings() {
 
         for (int index = 0; index < 8; index++) {
             charIndex = reading.indexOf(SEPARATOR);
-            // printer.toSerialNL(String("Reading: " + reading));
-            // printer.toSerialNL(String("Char ix: " + String(charIndex)));
             variables[index] = reading.substring(0, charIndex);
             reading.remove(0, charIndex + 1);
             printer.toSerialNL(String("Var at " + String(index) + ": " + variables[index]));
         }
     params.saveSettings(variables);
-    network.setTimeout(10000);
-    network.setupClient();
-    network.startClient();
-    network.checkStatus();
+    // network.setTimeout(10000);
+    // network.setupClient();
+    // network.startClient();
+    // network.checkStatus();
+    // network.makePayment();
     }
     else {
         printer.toSerialNL("Network settings not found");

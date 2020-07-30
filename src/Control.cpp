@@ -5,6 +5,8 @@ const char TWO = '2';
 const char THREE = '3';
 
 void Control::begin() {
+    payment = Payment();
+    payment.begin();
     printer.toSerialNL("Control started");
     signal.display(READY);
     state = MENU;
@@ -44,22 +46,17 @@ void Control::getKey() {
 
 void Control::select() {
     switch (input) {
+
         case ONE:
-            display.changePage(PAYMENT);
-            delay(3000);
-            state = MENU;
+            payment.start(PayCode::PURCHASE);
             break;
 
         case TWO:
-            display.changePage(QRIMAGE);
-            delay(3000);
-            state = MENU;
+            payment.start(PayCode::EXCHANGE);
             break;
 
         case THREE:
-            display.changePage(HISTORY);
-            delay(3000);
-            state = MENU;
+            payment.start(PayCode::HISTORY);
             break;
         
         default:
@@ -68,40 +65,8 @@ void Control::select() {
             signal.display(READY);
             printer.toSerialNL("Invalid option");
     }
+    
+    if (progress == Status::MENU) {
+        state = MENU;
+    }
 }
-
-// void Control::select() {
-//     if (input == '*') {
-//         if (digits.isEmpty()) {
-//             Serial.println("Switching previous screen");
-//         }
-//         else {
-//             digits.trimValue();
-//         }
-//     }
-//     else if (input == '#') {
-//         if (digits.isEmpty()) {
-//             Serial.println("[LED] Digits field is empty");
-//             alert = true;
-//             blinker.turnLedOff();
-//             blinker.setColor(RED);
-//         }
-//         else if (!digits.isValid()) {  
-//             Serial.println("[LED] Digits field is less than 1");
-//             digits.clearValue();
-//         }
-//         else {
-//             if (digits.isDecimal()) {
-//                 Serial.println("Processing payment for USD " + String(digits.getValue()));
-//             }
-//             else {
-//                 digits.addDecimal();
-//             }
-//         }
-//     }
-//     else {
-//         digits.addNumber(input);
-//     }
-//     Serial.print("Field is: ");
-//     Serial.println(digits.getField());
-// }

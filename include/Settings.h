@@ -7,7 +7,8 @@
 #define SETTINGS_H
 
 extern APIData params;
-extern Network network;
+//extern Network network;
+
 extern bool DEVICE_RESET;
 
 class Settings {
@@ -37,6 +38,7 @@ class Settings {
 
         RunLevel state;
         
+        Network network;
         Memory storage;
         String password;
         String settings;

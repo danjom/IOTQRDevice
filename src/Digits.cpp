@@ -1,7 +1,4 @@
-#include <Arduino.h>
-#include <KeyScan.h>
 #include <Digits.h>
-
 
 Digits::Digits() {
     value = "";
