@@ -1,10 +1,11 @@
-#include <Common.h>
+#include <Project.h>
 #include <APIData.h>
 
 #ifndef NETWORK_H
 #define NETWORK_H
 
 extern APIData params;
+extern Printer printer;
 
 class Network {
     public:

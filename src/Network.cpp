@@ -1,8 +1,10 @@
+#include <Project.h>
 #include <Network.h>
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPmDNS.h>
 #include <DNSServer.h>
+#include <SPIFFS.h>
 
 AsyncWebServer server(80);
 DNSServer dns;

@@ -1,5 +1,4 @@
 #include <Memory.h>
-#include <Project.h>
 
 void Memory::begin() {
     if(!SPIFFS.begin(true)){
@@ -39,6 +38,7 @@ String Memory::read(String path) {
         }
     }
     printer.toSerialNL(String("File Content: " + content));
+    
     file.close();
 
     return content;

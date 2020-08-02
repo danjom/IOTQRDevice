@@ -1,7 +1,6 @@
-#include <Common.h>
+#include <Project.h>
 #include <Timer.h>
-#include <APIData.h>
-#include <HTTPClient.h>
+#include <ArduinoJson.h>
 
 #ifndef REQUESTS_H
 #define REQUESTS_H
@@ -12,37 +11,34 @@ class Requests {
     public:
         Requests();
         void setupClient();
-        void startClient();
         void checkStatus();
-        void makePayment(String jsonData);
+        void makePayment(float value);
         void checkPayment();
         void showRecentLog();
-        void setTimeout(int time);
 
-        String getSettings();
-        String getPayload();
+        String getRequest();
+
     private:
-        void addHeaders();
-        void addRequest();
+        void makePayload(float value);
+        void saveResponse(String &json);
 
-        Timer timer;
-        HTTPClient *http;
+        String SERVER_URL;
+        String SERVER_API;
+        String API_CHECKER;
+        String API_PAYMENT;
+        String API_REQUEST;
+        String API_PAYDKEY;
+        String API_PAYREQC;
+        String APPLICATION;
+
         String settings;
+        String response;
         String payload;
 
         String *netData;
         String *apiData;
 
         int timeout;
-
-        const String SERVER_URL = "https://yoy-valid8api.azurewebsites.net";
-        const String SERVER_API = "/api/v";
-        const String API_CHECKER = "/statuschecker/get";
-        const String API_PAYMENT = "/paymentRequest/post";
-        const String API_REQUEST = "/paymentRequest/get?";
-        const String API_PAYDKEY = "deviceKey=";
-        const String API_PAYREQC = "&requestCode=";
-        const String APPLICATION = "application/json";
 };
 
 #endif

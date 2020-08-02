@@ -1,9 +1,16 @@
 #include <Requests.h>
 #include <WiFi.h>
+#include <HTTPClient.h>
 
 Requests::Requests() {
-    timer = Timer();
-    http = new HTTPClient();
+    SERVER_URL = "https://yoy-valid8api.azurewebsites.net";
+    SERVER_API = "/api/v";
+    API_CHECKER = "/statuschecker/get";
+    API_PAYMENT = "/paymentRequest/post";
+    API_REQUEST = "/paymentRequest/get?";
+    API_PAYDKEY = "deviceKey=";
+    API_PAYREQC = "&requestCode=";
+    APPLICATION = "application/json";
 
     payload = "";
 }
@@ -13,99 +20,106 @@ void Requests::setupClient() {
     apiData = params.getAuthData();
 }
 
-void Requests::startClient() {
-    IPAddress ip;
-
-    WiFi.begin(netData[0].c_str(), netData[1].c_str());
-    printer.toSerialSL("\nConnecting ");
-    while(WiFi.status() != WL_CONNECTED) {
-        delay(500);
-        printer.toSerialSL(". ");
-        if (timer.check()) {
-            break;
-        }
-    }
-    printer.toSerialNL("");
-    if (WiFi.status() == WL_CONNECTED) {
-        ip = WiFi.localIP();
-        printer.toSerialSL("Connected to WiFi network with IP Address: ");
-        printer.toSerialNL(ip.toString());
-    }
-    else {
-        printer.toSerialNL("[TIMEOUT] Network not connected");
-    }
-}
-
 void Requests::checkStatus() {
+    HTTPClient http;
+    
     String request = String(SERVER_URL + SERVER_API + apiData[VERSION] + API_CHECKER);
     printer.toSerialNL(request);
 
     if(WiFi.status()== WL_CONNECTED){
-        http->begin(request.c_str());
+        http.begin(request.c_str());
 
-        addHeaders();
+        http.addHeader("Accept", APPLICATION);
+        http.addHeader("Content-Type", APPLICATION);
+        http.addHeader("X-Api-Key", apiData[APILOGIN]);
+        http.addHeader("X-Discrim", apiData[GROUPXDS]);
+        http.addHeader("Accept-Language", apiData[LANGUAGE]);
 
-        int httpResponseCode = http->GET();
+        int httpResponseCode = http.GET();
 
         if (httpResponseCode == 200) {
+            printer.toSerialSL("[ANSWR] ");
             printer.toSerialNL(String(httpResponseCode));
-            String payload = http->getString();
-            printer.toSerialNL(payload);
+
+            String status = http.getString();
+            printer.toSerialNL(status);
         }
         else {
-            printer.toSerialSL("Error code: ");
+            printer.toSerialSL("[ERORR] ");
             printer.toSerialNL(String(httpResponseCode));
         }
-        http->end();
+        http.end();
     }
     else {
-        printer.toSerialNL("[STATUS] API is not reachable");
+        printer.toSerialNL("[ERORR] API is out of reach");
     }
 }
 
-void Requests::makePayment(String jsonData) {
-    String request = String(SERVER_URL + SERVER_API + apiData[VERSION] + API_PAYMENT);
-    printer.toSerialNL(request);
+void Requests::makePayment(float value) {
+    makePayload(value);
+
+    HTTPClient http;
+
+    String endpoint = String(SERVER_URL + SERVER_API + apiData[VERSION] + API_PAYMENT);
+    //printer.toSerialNL(endpoint);
 
     if(WiFi.status()== WL_CONNECTED){
-        http->begin(request.c_str());
+        http.begin(endpoint.c_str());
 
-        addHeaders();
+        http.addHeader("Accept", APPLICATION);
+        http.addHeader("Content-Type", APPLICATION);
+        http.addHeader("X-Api-Key", apiData[APILOGIN]);
+        http.addHeader("X-Discrim", apiData[GROUPXDS]);
+        http.addHeader("Accept-Language", apiData[LANGUAGE]);
 
-        int httpResponseCode = http->POST(jsonData);
+        int httpResponseCode = http.POST(payload);
 
         if (httpResponseCode == 200) {
+            response = http.getString();
+            printer.toSerialSL("[ANSWR] ");
             printer.toSerialNL(String(httpResponseCode));
-            payload = http->getString();
+            //printer.toSerialNL(response);
+            saveResponse(response);
         }
-        else {
-            printer.toSerialSL("Error code: ");
+            else {
+            response = http.getString();
+            printer.toSerialSL("[ERORR] ");
             printer.toSerialNL(String(httpResponseCode));
         }
-        http->end();
+        http.end();
     }
+}
+
+void Requests::saveResponse(String &json) {
+    uint8_t size = (json.length() + 1);
+    char response[size]; 
+    json.toCharArray(response, size);
+
+    StaticJsonBuffer<200> jsonBuffer;
+    JsonObject& root = jsonBuffer.parseObject(response);
+
+    printer.toSerialSL("Request key: "); 
+    printer.toSerialNL(root["requestCode"]);
+
+    printer.toSerialSL("Message: "); 
+    printer.toSerialNL(root["messageToDisplay"]);
 }
 
 void Requests::checkPayment() {
-
+    HTTPClient http;
 }
 
-void Requests::addHeaders() {
-    http->addHeader("Accept", APPLICATION);
-    http->addHeader("Content-Type", APPLICATION);
-    http->addHeader("X-Api-Key", apiData[APILOGIN]);
-    http->addHeader("X-Discrim", apiData[GROUPXDS]);
-    http->addHeader("Accept-Language", apiData[LANGUAGE]);
-}
+void Requests::makePayload(float value) {
+    String deviceid = params.getAuthData()[DEVICEID];
 
-void Requests::addRequest() {
+    StaticJsonBuffer<200> jsonBuffer;
+    JsonObject& root = jsonBuffer.createObject();
 
-}
+    root["deviceKey"] = deviceid;
+    root["amount"] = value;
+    root["currencyType"] = 1;
 
-void Requests::setTimeout(int time) {
-    timer.setTimer(time);
-}
+    root.printTo(payload);
 
-String Requests::getPayload() {
-    return payload;
+    //printer.toSerialNL(String("JSON Content: " + payload));
 }

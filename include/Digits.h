@@ -6,15 +6,15 @@
 class Digits {
     public:
         Digits();
+        void trimValue();
+        void clearValue();
+        void addDecimal();
+        void addNumber(char);
         bool isEmpty();
         bool isValid();
         bool isDecimal();
         float getValue();
         String getField();
-        void trimValue();
-        void clearValue();
-        void addDecimal();
-        void addNumber(char);
 
     private:
         String value;

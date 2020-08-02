@@ -1,7 +1,13 @@
 #include <Settings.h>
 
+const byte STATE_STORE = 0;
+const char SEPARATOR = ',';
+const String RUN_PATH = "/runlevel.txt";
+const String PWD_PATH = "/devauth.txt";
+const String CFG_PATH = "/settings.txt"; 
+
 Settings::Settings() {
-    storage = Memory();
+
 }
 
 void Settings::begin() {
@@ -81,18 +87,6 @@ void Settings::setSettings() {
     readSettings();
 }
 
-void Settings::readPassword() {
-    password = storage.read(PWD_PATH);
-
-    if (password.length() > 0) {
-        printer.toSerialNL("Device settings found");
-        printer.toSerialNL(String("Device password is " + password));
-    }
-    else {
-        printer.toSerialNL("Device settings not found");
-    }
-}
-
 void Settings::readSettings() {
     String variables[8];
     String reading = storage.read(CFG_PATH);
@@ -108,14 +102,21 @@ void Settings::readSettings() {
             printer.toSerialNL(String("Var at " + String(index) + ": " + variables[index]));
         }
     params.saveSettings(variables);
-    // network.setTimeout(10000);
-    // network.setupClient();
-    // network.startClient();
-    // network.checkStatus();
-    // network.makePayment();
     }
     else {
         printer.toSerialNL("Network settings not found");
+    }
+}
+
+void Settings::readPassword() {
+    password = storage.read(PWD_PATH);
+
+    if (password.length() > 0) {
+        printer.toSerialNL("Device settings found");
+        printer.toSerialNL(String("Device password is " + password));
+    }
+    else {
+        printer.toSerialNL("Device settings not found");
     }
 }
 
@@ -138,9 +139,9 @@ void Settings::clearSettings() {
 }
 
 void Settings::resetSettings() {
+    storage.write(RUN_PATH, String(LOGIN));
     clearPassword();
     clearSettings();
-    storage.write(RUN_PATH, String(LOGIN));
     restartDevice();
 }
 

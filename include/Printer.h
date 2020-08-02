@@ -4,11 +4,12 @@
 #define PRINTER_H
 
 extern bool SERIAL_DEBUG;
+
 class Printer {
     public:
         Printer() = default;
-        void toSerialSL(String);
-        void toSerialNL(String);       
+        void toSerialSL(String message);
+        void toSerialNL(String message);       
 };
 
 #endif

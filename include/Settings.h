@@ -1,13 +1,9 @@
-#include <Common.h>
+#include <Project.h>
 #include <Memory.h>
 #include <Network.h>
-#include <APIData.h>
 
 #ifndef SETTINGS_H
 #define SETTINGS_H
-
-extern APIData params;
-//extern Network network;
 
 extern bool DEVICE_RESET;
 
@@ -37,18 +33,11 @@ class Settings {
         RunLevel states[5] = {RESET, LOGIN, NETWORK, VERIFY, READY};
 
         RunLevel state;
-        
-        Network network;
         Memory storage;
+        Network network; 
+        
         String password;
         String settings;
-
-        const byte EEPROM_SIZE = 1;
-        const byte STATE_STORE = 0;
-        const char SEPARATOR = ',';
-        const String RUN_PATH = "/runlevel.txt";
-        const String PWD_PATH = "/devauth.txt";
-        const String CFG_PATH = "/settings.txt"; 
 };
 
 #endif

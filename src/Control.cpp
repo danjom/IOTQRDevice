@@ -1,13 +1,16 @@
 #include <Control.h>
+#include <WClient.h>
 
 const char ONE = '1';
 const char TWO = '2';
 const char THREE = '3';
 
 void Control::begin() {
-    payment = Payment();
-    payment.begin();
     printer.toSerialNL("Control started");
+    payment.begin();
+    while (true) {
+        payment.start(PayCode::PURCHASE);
+    }
     signal.display(READY);
     state = MENU;
 }
@@ -15,10 +18,7 @@ void Control::begin() {
 void Control::check() {
     switch (state) {
         case MENU:
-            printer.toSerialNL("Waiting for key");
-            signal.display(READY);
-            display.changePage(OPTIONS);
-            state = SCAN;
+            showMenu();
             break;
 
         case SCAN:
@@ -32,6 +32,13 @@ void Control::check() {
         default:
             break;
     }
+}
+
+void Control::showMenu() {
+    printer.toSerialNL("Waiting for key");
+    signal.display(READY);
+    display.changePage(OPTIONS);
+    state = SCAN;
 }
 
 void Control::getKey() {

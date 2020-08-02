@@ -1,21 +1,17 @@
 #include <Payment.h>
 
-Payment::Payment() {
-
-}
-
 void Payment::begin() {
-    timer = Timer(300);
-    digits = Digits();
-    request = new Requests();
-    request->setTimeout(30000);
-    request->setupClient();
-    request->startClient();
-    makePayment("4500");
-    checkPayment();
+    // request = Requests();
+    // request.setupClient();
+    // request.checkStatus();
+    timer.setTimer(300);
 }
 
 void Payment::start(PayCode type) {
+    printer.toSerialNL("New request");
+    request = Requests();
+    request.setupClient();
+
     progress = Status::PAYMENT;
     payCode = type;
     select();
@@ -30,6 +26,10 @@ void Payment::select() {
 }
 
 void Payment::choose() {
+    input = scanner.getKey();
+    //printer.toSerialSL("Input is: ");
+    //printer.toSerialNL(String(input));
+
     if (payCode == PayCode::PURCHASE) {
         purchase();
     }
@@ -41,18 +41,7 @@ void Payment::choose() {
     }
 }
 
-
-void Payment::getKey() {
-    input = scanner.getKey();
-
-    if (input) {
-        printer.toSerialSL("Input is: ");
-        printer.toSerialNL(String(input));
-    }
-}
-
 void Payment::purchase() {
-    this->getKey();
     if (input) {
         if (input == '*') {
             if (digits.isEmpty()) {
@@ -79,19 +68,19 @@ void Payment::purchase() {
                 if (digits.isDecimal()) {
                     
                     printer.toSerialNL("Processing payment for USD " + String(digits.getValue()));
+                    request.makePayment(digits.getValue());
+
                     display.changeData(DIGITS, String(digits.getValue()));
-                    delay(1000);
+                    //delay(1000);
                     display.changePage(QRIMAGE);
                     display.changeData(QRCODE, String(digits.getValue()));
                     signal.display(AwAIT);
-                    delay(5000);
+                    //delay(5000);
                     display.changePage(SUCCESS);
                     signal.display(CORRECT);
-                    delay(5000);
+                    //delay(5000);
                     progress = Status::MENU;
                     digits.clearValue();
-
-                    
                 }
                 else {
                     digits.addDecimal();
@@ -103,8 +92,8 @@ void Payment::purchase() {
             digits.addNumber(input);
             display.changeData(DIGITS, digits.getField());
         }
-        printer.toSerialSL("Field is: ");
-        printer.toSerialNL(digits.getField());
+        //printer.toSerialSL("Field is: ");
+        //printer.toSerialNL(digits.getField());
     }
 }
 
@@ -117,37 +106,9 @@ void Payment::showRecent() {
 }
 
 void Payment::makePayment(String amount) {
-    String process;
-    String deviceid = params.getAuthData()[DEVICEID];
 
-    StaticJsonBuffer<200> jsonBuffer;
-    JsonObject& root = jsonBuffer.createObject();
-
-    root["deviceKey"] = deviceid;
-    root["amount"] = amount;
-    root["currencyType"] = 1;
-
-    root.printTo(process);
-    printer.toSerialNL(String("Process" + process));
-
-    request->makePayment(process);
 }
 
 void Payment::checkPayment() {
-    String result;
-    bool check = true;
 
-    while (check) {
-        delay(1000);
-        result = request->getPayload();
-
-        if (result.length() > 0) {
-            check = false;
-        }
-
-        if (timer.check()) {
-            check = false;
-        }
-    }
-    printer.toSerialNL(result);
 }

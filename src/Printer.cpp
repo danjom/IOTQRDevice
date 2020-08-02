@@ -1,13 +1,13 @@
 #include <Printer.h>
 
-void Printer::toSerialSL(String msgs) {
+void Printer::toSerialSL(String message) {
     if (SERIAL_DEBUG) {
-        Serial.print(msgs);
+        Serial.print(message);
     }
 }
 
-void Printer::toSerialNL(String msgs) {
+void Printer::toSerialNL(String message) {
     if (SERIAL_DEBUG) {
-        Serial.println(msgs);
+        Serial.println(message);
     }
 }
