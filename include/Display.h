@@ -3,13 +3,13 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-enum uiblock {QRCODE, SYMBOL, DIGITS};
-enum nextion {OPTIONS, PAYMENT, QRIMAGE, SUCCESS, REFUSED, WARNING, HISTORY};
+enum class UIBlock {QRCODE, SYMBOL, DIGITS};
+enum class Nextion {OPTIONS, PAYMENT, QRIMAGE, SUCCESS, REFUSED, WARNING, HISTORY};
 
 class Display {
     public:
-        void changePage(int);
-        void changeData(int, String);
+        void changePage(Nextion page);
+        void changeData(UIBlock block, String data);
         void writeEndBits();
 
     private:

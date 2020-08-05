@@ -1,48 +1,57 @@
 #include <Project.h>
 #include <APIData.h>
-#include <Digits.h>
-#include <Display.h>
-#include <KeyScan.h>
-#include <Signals.h>
-#include <Blinker.h>
-#include <Timer.h>
+#include <Numbers.h>
+#include <Request.h>
+#include <ArduinoJson.h>
 
 #ifndef PAYMENT_H
 #define PAYMENT_H
 
-extern APIData params;
-extern Display display;
-extern KeyScan scanner;
-extern Signals signal;
-extern Blinker blinker;
-
 enum class PayCode {PURCHASE, EXCHANGE, HISTORY};
 
+extern APIData params;
+
 class Payment {
-    enum class status {PAYMENT, READY};
+    enum status {SCANNER, PAYMENT, READY};
 
     public:
-        Payment() = default;
-        void begin();
+        Payment();
         void start(PayCode type);
     private:
         void select();
-        void choose();
 
         void purchase();
         void exchange();
         void showRecent();
         
-        void makePayment(String amount);
-        void sendPayment(String amount);
+        void makePayment();
+        void sendPayment();
         void checkPayment();
 
-        Timer timer;
-        Digits digits;
-        PayCode payCode;
-        String amount;
-        char input;
+        void paymentPayload();
+        void paymentRequest();
+        void paymentResponse();
+        void paymentVerify();
+
+        void getResponse();
+        void getHTTPCode();
+
+        Numbers numbers;
+        Request request;
+        String jsonData;
+        String response;
+        String deviceID;
+
+        String message;
+        String paycode;
+
+        PayCode codeType;
+
+        float amount;
+        int server;
         int status;
+        char input;
+        
 };
 
 #endif

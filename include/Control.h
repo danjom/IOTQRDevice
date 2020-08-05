@@ -34,13 +34,12 @@ class Control {
         void select();
         void process();
 
-        KeyScan scanner;
         Settings settings;
         Connect network;
-        APITest apitest;
-        Request request;
         Payment payment;
         PayCode paycode;
+        APITest apitest;
+        //Request request;
         
         char input;
         

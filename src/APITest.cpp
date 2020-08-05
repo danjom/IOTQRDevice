@@ -25,7 +25,6 @@ void APITest::begin() {
 
 void APITest::checkStatus(HTTPClient &http) {
     while (attempts < MAX_TRIES && !APIReady) {
-        Printer::toSerialNL("Attempting status check");
         getResponse(http);
         attempts++;
         delay(WAIT_TIME);

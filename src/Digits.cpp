@@ -33,7 +33,8 @@ void Digits::addDecimal() {
 }
 
 void Digits::trimValue() {
-    value = value.substring(0, value.length()-1);
+    value.remove(value.length()-1, 1);
+    //value = value.substring(0, value.length()-1);
 }
 
 void Digits::clearValue() {

@@ -1,7 +1,6 @@
 #include <Project.h>
 #include <APIData.h>
 #include <HTTPClient.h>
-#include <ArduinoJson.h>
 
 #ifndef REQUEST_H
 #define REQUEST_H
@@ -12,15 +11,11 @@ class Request {
     public:
         Request();
         void begin();
-        void makePayment(float value);
-        void checkPayment();
-        void showRecentLog();
-
-        String getRequest();
-
+        String makePayment(String json);
+        String checkPayment(String json);
+        String showRecentLog(String json);
     private:
-        void makePayload(float value);
-        void saveResponse(String &json);
+        void addHeaders(HTTPClient &http);
 
         String SERVER_URL;
         String SERVER_API;
@@ -34,6 +29,8 @@ class Request {
         String payload;
 
         String *apiData;
+
+        int httpCode;
 };
 
 #endif

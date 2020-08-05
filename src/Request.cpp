@@ -2,7 +2,8 @@
 #include <WiFi.h>
 
 Request::Request() {
-
+    response = "";
+    httpCode = 0;
 }
 
 void Request::begin() {
@@ -14,73 +15,48 @@ void Request::begin() {
     API_PAYREQC = "&requestCode=";
     APPLICATION = "application/json";
 
-    payload = "";
-
     apiData = params.getAuthData();
 }
 
-void Request::makePayment(float value) {
+String Request::makePayment(String json) {
     HTTPClient http;
-    makePayload(value);
 
     String endpoint = String(SERVER_URL + SERVER_API + apiData[VERSION] + API_PAYMENT);
     //Printer::toSerialNL(endpoint);
+    Printer::toSerialNL(json);
 
     if(WiFi.status()== WL_CONNECTED){
         http.begin(endpoint.c_str());
+        
+        addHeaders(http);
 
-        http.addHeader("Accept", APPLICATION);
-        http.addHeader("Content-Type", APPLICATION);
-        http.addHeader("X-Api-Key", apiData[APILOGIN]);
-        http.addHeader("X-Discrim", apiData[GROUPXDS]);
-        http.addHeader("Accept-Language", apiData[LANGUAGE]);
+        httpCode = http.POST(json);
 
-        int httpResponseCode = http.POST(payload);
-
-        if (httpResponseCode == 200) {
+        if (httpCode == 200) {
             response = http.getString();
             Printer::toSerialSL("[ANSWR] ");
-            Printer::toSerialNL(String(httpResponseCode));
-            //Printer::toSerialNL(response);
-            saveResponse(response);
+            Printer::toSerialNL(String(httpCode));
         }
-            else {
+        else {
             response = http.getString();
             Printer::toSerialSL("[ERORR] ");
-            Printer::toSerialNL(String(httpResponseCode));
+            Printer::toSerialNL(String(httpCode));
+            Printer::toSerialNL(response);
+            LEVEL = RunLevel::ERROR;
         }
         http.end();
     }
+    return response;
 }
 
-void Request::saveResponse(String &json) {
-    uint8_t size = (json.length() + 1);
-    char response[size]; 
-    json.toCharArray(response, size);
-
-    StaticJsonBuffer<200> jsonBuffer;
-    JsonObject& root = jsonBuffer.parseObject(response);
-
-    Printer::toSerialSL("Request key: "); 
-    Printer::toSerialNL(root["requestCode"]);
-
-    Printer::toSerialSL("Message: "); 
-    Printer::toSerialNL(root["messageToDisplay"]);
+String Request::checkPayment(String json) {
+    return response;
 }
 
-void Request::checkPayment() {
-    HTTPClient http;
-}
-
-void Request::makePayload(float value) {
-    String deviceid = params.getAuthData()[DEVICEID];
-
-    StaticJsonBuffer<200> jsonBuffer;
-    JsonObject& root = jsonBuffer.createObject();
-
-    root["deviceKey"] = deviceid;
-    root["amount"] = value;
-    root["currencyType"] = 1;
-
-    root.printTo(payload);
+void Request::addHeaders(HTTPClient &http) {
+    http.addHeader("Accept", APPLICATION);
+    http.addHeader("Content-Type", APPLICATION);
+    http.addHeader("X-Api-Key", apiData[APILOGIN]);
+    http.addHeader("X-Discrim", apiData[GROUPXDS]);
+    http.addHeader("Accept-Language", apiData[LANGUAGE]);
 }
