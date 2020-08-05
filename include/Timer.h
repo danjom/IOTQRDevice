@@ -1,18 +1,20 @@
+#include <Project.h>
+
 #ifndef TIMER_H
 #define TIMER_H
 
 class Timer {
     public:
-        Timer() = default;
-        Timer(unsigned int);
+        Timer();
+        Timer(unsigned long);
         bool check();
         void reset();
-        void setTimer(unsigned int);
+        void setTimer(unsigned long);
 
     private:
         unsigned long current;
         unsigned long previous;
-        unsigned int interval;
+        unsigned long interval;
 };
 
 #endif

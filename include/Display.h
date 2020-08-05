@@ -3,6 +3,9 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+enum uiblock {QRCODE, SYMBOL, DIGITS};
+enum nextion {OPTIONS, PAYMENT, QRIMAGE, SUCCESS, REFUSED, WARNING, HISTORY};
+
 class Display {
     public:
         void changePage(int);

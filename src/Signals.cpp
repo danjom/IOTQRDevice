@@ -1,5 +1,4 @@
 #include <Signals.h>
-#include <Options.h>
 
 void Signals::display(int id) {
     switch (id) {

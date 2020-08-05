@@ -1,7 +1,4 @@
-#include <Arduino.h>
-#include <KeyScan.h>
 #include <Digits.h>
-
 
 Digits::Digits() {
     value = "";
@@ -12,7 +9,7 @@ bool Digits::isEmpty() {
 }
 
 bool Digits::isValid() {
-    return (this->getValue() >= 1);
+    return (getValue() >= 1);
 }
 
 bool Digits::isDecimal() {

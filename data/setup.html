@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Device Setup</title>
+    <link rel="stylesheet" href="style.css" media="screen" type="text/css" />
+</head>
+<body>
+  <div class="login">
+    <h1>Device Settings</h1>
+    <form method="GET" action="/get">
+        <input type="text" name="network" placeholder="SSID" required="required" />
+        <input type="password" name="password" placeholder="Password" required="required" />
+        <input type="text" name="device" placeholder="Device ID" required="required"/>
+        <input type="text" name="group" placeholder="Group" required="required"/>
+        <input type="text" name="apikey" placeholder="API Key" required="required" />
+        <input type="number" name="apiver" placeholder="API Version" required="required" />
+
+        <label>Language</label><br><br>
+        <select id="currency" name="language">
+          <option value="es-MX">es-MX</option>
+          <option value="es-MX">en-US</option>
+        </select>
+
+        <label>Currency</label><br><br>
+        <select id="language" name="currency">
+          <option value="CRC">COL₡</option>
+          <option value="USD">US$</option>
+          <option value="EUR">MX$</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary btn-block btn-large">Setup</button>
+      </form>
+  </div>
+</body>
+</html>

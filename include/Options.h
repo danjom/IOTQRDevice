@@ -1,9 +1,0 @@
-#ifndef OPTIONS_H
-#define OPTIONS_H
-
-enum options {MENU, SCAN, SELECT,};
-enum uiblock {QRCODE, SYMBOL, DIGITS};
-enum nextion {OPTIONS, PAYMENT, QRIMAGE, SUCCESS, REFUSED, WARNING, HISTORY};
-enum signals {SETUP, LOADING, READY, NETWORK, WRONG, CORRECT, REJECT, AwAIT, ERROR};
-
-#endif
