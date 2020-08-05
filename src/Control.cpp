@@ -42,16 +42,23 @@ void Control::check() {
 void Control::runSetup() {
     settings.begin();
     network.connect();
-
+    apitest.begin();
+    
     LEVEL = RunLevel::MENU;
+
+    //Test payment before menu
+    //LEVEL = RunLevel::PAYMENT;
 }
 
 void Control::showMenu() {
     Printer::toSerialNL("Waiting for key");
-    signal.display(READY);
+    //signal.display(READY);
     display.changePage(OPTIONS);
 
     LEVEL = RunLevel::SCAN;
+
+    //Test payment before key scan
+    //LEVEL = RunLevel::PAYMENT;
 }
 
 void Control::getInput() {
@@ -68,22 +75,24 @@ void Control::getInput() {
 }
 
 void Control::select() {
+    LEVEL = RunLevel::PAYMENT;
+
     switch (input) {
         case '1':
-            LEVEL = RunLevel::PAYMENT;
+            paycode = PayCode::PURCHASE;
             break;
 
         case '2':
-            LEVEL = RunLevel::PAYMENT;
+            paycode = PayCode::EXCHANGE;
             break;
 
         case '3':
-            LEVEL = RunLevel::PAYMENT;
+            paycode = PayCode::HISTORY;
             break;
         
         default:
-            signal.display(WRONG);
-            signal.display(READY);
+            //signal.display(WRONG);
+            //signal.display(READY);
             Printer::toSerialNL("Invalid option");
 
             LEVEL = RunLevel::SCAN;
@@ -93,7 +102,6 @@ void Control::select() {
 
 void Control::process() {
     Printer::toSerialSL("Payment selected");
-    Request request;
     request.begin();
     request.makePayment(5000);
 
@@ -102,13 +110,9 @@ void Control::process() {
 
 void Control::test() {
     Printer::toSerialNL("Status check");
-
-    APITest apitest;
     apitest.begin();
 
     Printer::toSerialNL("Payment test");
-
-    Request request;
     request.begin();
     request.makePayment(5000);
 }

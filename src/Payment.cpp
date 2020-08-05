@@ -6,12 +6,11 @@ void Payment::begin() {
 
 void Payment::start(PayCode type) {
     Printer::toSerialNL("New request");
-    request.makePayment(5000);
 
     status = PAYMENT;
     payCode = type;
     
-    //select();
+    select();
 }
 
 void Payment::select() {
@@ -65,7 +64,6 @@ void Payment::purchase() {
                 if (digits.isDecimal()) {
                     
                     Printer::toSerialNL("Processing payment for USD " + String(digits.getValue()));
-                    request.makePayment(digits.getValue());
 
                     display.changeData(DIGITS, String(digits.getValue()));
                     //delay(1000);

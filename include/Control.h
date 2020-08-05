@@ -10,6 +10,7 @@
 #include <Connect.h>
 #include <APITest.h>
 #include <Request.h>
+#include <Payment.h>
 
 #ifndef CONTROL_H
 #define CONTROL_H
@@ -36,8 +37,13 @@ class Control {
         KeyScan scanner;
         Settings settings;
         Connect network;
+        APITest apitest;
+        Request request;
+        Payment payment;
+        PayCode paycode;
         
         char input;
+        
 };
 
 #endif

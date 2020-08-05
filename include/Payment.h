@@ -1,11 +1,11 @@
 #include <Project.h>
+#include <APIData.h>
 #include <Digits.h>
 #include <Display.h>
 #include <KeyScan.h>
 #include <Signals.h>
 #include <Blinker.h>
 #include <Timer.h>
-#include <Request.h>
 
 #ifndef PAYMENT_H
 #define PAYMENT_H
@@ -40,7 +40,6 @@ class Payment {
         Timer timer;
         Digits digits;
         PayCode payCode;
-        Request request;
         String amount;
         char input;
         int status;
