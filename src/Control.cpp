@@ -1,79 +1,114 @@
 #include <Control.h>
-#include <WClient.h>
 
-const char ONE = '1';
-const char TWO = '2';
-const char THREE = '3';
+Control::Control() {
+    LEVEL = RunLevel::SETUP;
+}
 
 void Control::begin() {
-    printer.toSerialNL("Control started");
-    payment.begin();
-    while (true) {
-        payment.start(PayCode::PURCHASE);
-    }
-    signal.display(READY);
-    state = MENU;
+    Printer::toSerialNL("\nProgram Started\n");
+
+    scanner.setDebounceTime(50);
+    blinker.begin(22, 500, 500);
+    blinker.setColor(ORANGE);
+    blinker.setLevel(125);
+    blinker.display();
+    blinker.turnLedOn();
+
+    runSetup();
 }
 
 void Control::check() {
-    switch (state) {
-        case MENU:
-            showMenu();
-            break;
-
-        case SCAN:
-            getKey();
-            break;
-        
-        case SELECT:
-            select();
-            break;
-
-        default:
-            break;
+    if (LEVEL == RunLevel::SETUP) {
+        runSetup();
+    }
+    else if (LEVEL == RunLevel::MENU) {
+        showMenu();
+    }
+    else if (LEVEL == RunLevel::SCAN) {
+        getInput();
+    }
+    else if (LEVEL == RunLevel::SELECT) {
+        select();
+    }
+    else if (LEVEL == RunLevel::PAYMENT) {
+        process();
+    }
+    else if (LEVEL == RunLevel::READY) {
+        Printer::toSerialNL("System is ready");
+        LEVEL = RunLevel::MENU;
     }
 }
 
-void Control::showMenu() {
-    printer.toSerialNL("Waiting for key");
-    signal.display(READY);
-    display.changePage(OPTIONS);
-    state = SCAN;
+void Control::runSetup() {
+    settings.begin();
+    network.connect();
+
+    LEVEL = RunLevel::MENU;
 }
 
-void Control::getKey() {
+void Control::showMenu() {
+    Printer::toSerialNL("Waiting for key");
+    signal.display(READY);
+    display.changePage(OPTIONS);
+
+    LEVEL = RunLevel::SCAN;
+}
+
+void Control::getInput() {
+    scanner.setDebounceTime(50);
+    
     input = scanner.getKey();
 
     if (input) {
-        printer.toSerialSL("Input is: ");
-        printer.toSerialNL(String(input));
-        state = SELECT;
+        Printer::toSerialSL("Input is: ");
+        Printer::toSerialNL(String(input));
+
+        LEVEL = RunLevel::SELECT;
     }
 }
 
 void Control::select() {
     switch (input) {
-
-        case ONE:
-            payment.start(PayCode::PURCHASE);
+        case '1':
+            LEVEL = RunLevel::PAYMENT;
             break;
 
-        case TWO:
-            payment.start(PayCode::EXCHANGE);
+        case '2':
+            LEVEL = RunLevel::PAYMENT;
             break;
 
-        case THREE:
-            payment.start(PayCode::HISTORY);
+        case '3':
+            LEVEL = RunLevel::PAYMENT;
             break;
         
         default:
-            state = SCAN;
             signal.display(WRONG);
             signal.display(READY);
-            printer.toSerialNL("Invalid option");
+            Printer::toSerialNL("Invalid option");
+
+            LEVEL = RunLevel::SCAN;
+            break;
     }
-    
-    if (progress == Status::MENU) {
-        state = MENU;
-    }
+}
+
+void Control::process() {
+    Printer::toSerialSL("Payment selected");
+    Request request;
+    request.begin();
+    request.makePayment(5000);
+
+    LEVEL = RunLevel::READY;
+}
+
+void Control::test() {
+    Printer::toSerialNL("Status check");
+
+    APITest apitest;
+    apitest.begin();
+
+    Printer::toSerialNL("Payment test");
+
+    Request request;
+    request.begin();
+    request.makePayment(5000);
 }

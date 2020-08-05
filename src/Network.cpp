@@ -1,5 +1,5 @@
-#include <Project.h>
 #include <Network.h>
+#include <Project.h>
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPmDNS.h>
@@ -10,12 +10,12 @@ AsyncWebServer server(80);
 DNSServer dns;
 
 void Network::startServer(String password) {
-    printer.toSerialNL("Setting Access Point . . .");
+    Printer::toSerialNL("Setting Access Point . . .");
     WiFi.softAP(device.c_str(), password.c_str());
 
     IPAddress IP = WiFi.softAPIP();
-    printer.toSerialSL("AP IP address: ");
-    printer.toSerialNL(IP.toString());
+    Printer::toSerialSL("AP IP address: ");
+    Printer::toSerialNL(IP.toString());
 
     dns.start (53, "*", WiFi.softAPIP() );
 }
@@ -38,19 +38,19 @@ void Network::setupServer() {
     server.on("/get", HTTP_GET, [&] (AsyncWebServerRequest *request) {
         if(request->hasParam("password")) {
             password = request->getParam("password")->value();
-            printer.toSerialNL(String("Received value: " + password));
+            Printer::toSerialNL(String("Received value: " + password));
 
             if (password.length() > 0) {
                 request->send(200, "text/html", "Device password set");
                 server.end();
-                printer.toSerialNL("Server closed");
+                Printer::toSerialNL("Server closed");
                 WiFi.disconnect();
-                printer.toSerialNL("Hotspot closed");
+                Printer::toSerialNL("Hotspot closed");
             }
         }
     });
     server.begin();
-    printer.toSerialNL("Server is running");
+    Printer::toSerialNL("Server is running");
 }
 
 void Network::setupDevice() {
@@ -68,30 +68,30 @@ void Network::setupDevice() {
 
     server.on("/get", HTTP_GET, [&] (AsyncWebServerRequest *request) {
         int inputCount = request->params();
-        printer.toSerialNL(String(inputCount));
+        Printer::toSerialNL(String(inputCount));
 
         for(int i = 0; i < inputCount; i++) {
         
             AsyncWebParameter* p = request->getParam(i);
         
-            printer.toSerialNL("Param name: " + p->name());
-            printer.toSerialNL("Param value: " + p->value());
+            Printer::toSerialNL("Param name: " + p->name());
+            Printer::toSerialNL("Param value: " + p->value());
         
-            printer.toSerialSL("------");
+            Printer::toSerialSL("------");
 
             settings.concat(p->value());
             settings.concat(',');
         }
         settings.remove(settings.lastIndexOf(','), 1);
-        printer.toSerialNL(String("Settings: " + settings));
+        Printer::toSerialNL(String("Settings: " + settings));
         server.end();
-        printer.toSerialNL("Server closed");
+        Printer::toSerialNL("Server closed");
         WiFi.disconnect();
-        printer.toSerialNL("Hotspot closed");
+        Printer::toSerialNL("Hotspot closed");
     });
     
     server.begin();
-    printer.toSerialNL("Server is running");
+    Printer::toSerialNL("Server is running");
 }
 
 String Network::getPassword() {

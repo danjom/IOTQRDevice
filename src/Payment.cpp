@@ -1,34 +1,31 @@
 #include <Payment.h>
 
 void Payment::begin() {
-    // request = Requests();
-    // request.setupClient();
-    // request.checkStatus();
     timer.setTimer(300);
 }
 
 void Payment::start(PayCode type) {
-    printer.toSerialNL("New request");
-    request = Requests();
-    request.setupClient();
+    Printer::toSerialNL("New request");
+    request.makePayment(5000);
 
-    progress = Status::PAYMENT;
+    status = PAYMENT;
     payCode = type;
-    select();
+    
+    //select();
 }
 
 void Payment::select() {
-    printer.toSerialNL("Payment mode select");
+    Printer::toSerialNL("Payment mode select");
 
-    while (progress == Status::PAYMENT) {
+    while (status == PAYMENT) {
         choose();
     }
 }
 
 void Payment::choose() {
     input = scanner.getKey();
-    //printer.toSerialSL("Input is: ");
-    //printer.toSerialNL(String(input));
+    //Printer::toSerialSL("Input is: ");
+    //Printer::toSerialNL(String(input));
 
     if (payCode == PayCode::PURCHASE) {
         purchase();
@@ -45,8 +42,8 @@ void Payment::purchase() {
     if (input) {
         if (input == '*') {
             if (digits.isEmpty()) {
-                printer.toSerialNL("Switching previous screen");
-                progress = Status::MENU;
+                Printer::toSerialNL("Switching previous screen");
+                status = READY;
             }
             else {
                 digits.trimValue();
@@ -55,19 +52,19 @@ void Payment::purchase() {
         }
         else if (input == '#') {
             if (digits.isEmpty()) {
-                printer.toSerialNL("[LED] Digits field is empty");
+                Printer::toSerialNL("[LED] Digits field is empty");
                 blinker.turnLedOff();
                 blinker.setColor(RED);
             }
             else if (!digits.isValid()) {  
-                printer.toSerialNL("[LED] Digits field is less than 1");
+                Printer::toSerialNL("[LED] Digits field is less than 1");
                 digits.clearValue();
                 display.changeData(DIGITS, digits.getField());
             }
             else {
                 if (digits.isDecimal()) {
                     
-                    printer.toSerialNL("Processing payment for USD " + String(digits.getValue()));
+                    Printer::toSerialNL("Processing payment for USD " + String(digits.getValue()));
                     request.makePayment(digits.getValue());
 
                     display.changeData(DIGITS, String(digits.getValue()));
@@ -79,7 +76,7 @@ void Payment::purchase() {
                     display.changePage(SUCCESS);
                     signal.display(CORRECT);
                     //delay(5000);
-                    progress = Status::MENU;
+                    status = READY;
                     digits.clearValue();
                 }
                 else {
@@ -92,8 +89,8 @@ void Payment::purchase() {
             digits.addNumber(input);
             display.changeData(DIGITS, digits.getField());
         }
-        //printer.toSerialSL("Field is: ");
-        //printer.toSerialNL(digits.getField());
+        //Printer::toSerialSL("Field is: ");
+        //Printer::toSerialNL(digits.getField());
     }
 }
 

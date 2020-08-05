@@ -1,17 +1,17 @@
 #include <Project.h>
-#include <Timer.h>
+#include <APIData.h>
+#include <HTTPClient.h>
 #include <ArduinoJson.h>
 
-#ifndef REQUESTS_H
-#define REQUESTS_H
+#ifndef REQUEST_H
+#define REQUEST_H
 
 extern APIData params;
 
-class Requests {
+class Request {
     public:
-        Requests();
-        void setupClient();
-        void checkStatus();
+        Request();
+        void begin();
         void makePayment(float value);
         void checkPayment();
         void showRecentLog();
@@ -24,21 +24,16 @@ class Requests {
 
         String SERVER_URL;
         String SERVER_API;
-        String API_CHECKER;
         String API_PAYMENT;
         String API_REQUEST;
         String API_PAYDKEY;
         String API_PAYREQC;
         String APPLICATION;
 
-        String settings;
         String response;
         String payload;
 
-        String *netData;
         String *apiData;
-
-        int timeout;
 };
 
 #endif

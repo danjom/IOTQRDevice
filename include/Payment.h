@@ -4,16 +4,11 @@
 #include <KeyScan.h>
 #include <Signals.h>
 #include <Blinker.h>
-
-// Included objects
-#include <Requests.h>
 #include <Timer.h>
-
+#include <Request.h>
 
 #ifndef PAYMENT_H
 #define PAYMENT_H
-
-enum class PayCode {PURCHASE, EXCHANGE, HISTORY};
 
 extern APIData params;
 extern Display display;
@@ -21,7 +16,11 @@ extern KeyScan scanner;
 extern Signals signal;
 extern Blinker blinker;
 
+enum class PayCode {PURCHASE, EXCHANGE, HISTORY};
+
 class Payment {
+    enum class status {PAYMENT, READY};
+
     public:
         Payment() = default;
         void begin();
@@ -41,11 +40,10 @@ class Payment {
         Timer timer;
         Digits digits;
         PayCode payCode;
-        Requests request;
-        
-
+        Request request;
         String amount;
         char input;
+        int status;
 };
 
 #endif

@@ -5,11 +5,11 @@
 
 extern bool SERIAL_DEBUG;
 
-class Printer {
+class Printer final {
     public:
-        Printer() = default;
-        void toSerialSL(String message);
-        void toSerialNL(String message);       
+        Printer() = delete;
+        static void toSerialSL(String message);
+        static void toSerialNL(String message);       
 };
 
 #endif

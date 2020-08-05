@@ -10,8 +10,8 @@ void Connect::connect() {
     String ssid = credentials[WiFiData::SSID];
     String pass = credentials[WiFiData::PASS];
 
-    printer.toSerialNL(String("Stored SSID:" + ssid));
-    printer.toSerialNL(String("Stored PASS:" + pass));
+    // printer.toSerialNL(String("Stored SSID:" + ssid));
+    // printer.toSerialNL(String("Stored PASS:" + pass));
   
     client.startClient(ssid, pass);
 

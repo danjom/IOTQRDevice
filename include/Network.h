@@ -5,7 +5,6 @@
 #define NETWORK_H
 
 extern APIData params;
-extern Printer printer;
 
 class Network {
     public:

@@ -1,32 +1,42 @@
 #include <Project.h>
+
 #include <Display.h>
 #include <KeyScan.h>
 #include <Signals.h>
-#include <Payment.h>
-#include <Printer.h>
+#include <Blinker.h>
+
+#include <APIData.h>
+#include <Settings.h>
+#include <Connect.h>
+#include <APITest.h>
+#include <Request.h>
 
 #ifndef CONTROL_H
 #define CONTROL_H
 
+extern APIData params;
 extern Display display;
-extern KeyScan scanner;
 extern Signals signal;
-extern Payment payment;
-extern Printer printer;
+extern Blinker blinker;
 
 class Control {
-    enum options {MENU, SCAN, SELECT};
     public:
-        Control() = default;
+        Control();
         void begin();
         void check();
+        void test();
 
     private:
+        void runSetup();
+        void getInput();
         void showMenu();
-        void getKey();
         void select();
+        void process();
 
-        int state;
+        KeyScan scanner;
+        Settings settings;
+        Connect network;
+        
         char input;
 };
 

@@ -1,10 +1,12 @@
 #include <Project.h>
+#include <APIData.h>
 #include <Memory.h>
 #include <Network.h>
 
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+extern APIData params;
 extern bool DEVICE_RESET;
 
 class Settings {
