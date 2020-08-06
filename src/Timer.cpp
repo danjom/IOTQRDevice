@@ -4,6 +4,8 @@ const unsigned long DEFAULT_TIME = 1000;
 
 Timer::Timer() {
     interval = DEFAULT_TIME;
+    current = 0;
+    previous = 0;
 }
 
 Timer::Timer(unsigned long time) {

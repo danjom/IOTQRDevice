@@ -1,24 +1,14 @@
 #include <Request.h>
+#include <WebData.h>
 #include <WiFi.h>
 
 Request::Request() {
     response = "";
-    httpCode = 0;
-}
-
-void Request::begin() {
-    SERVER_URL = "https://yoy-valid8api.azurewebsites.net";
-    SERVER_API = "/api/v";
-    API_PAYMENT = "/paymentRequest/post";
-    API_REQUEST = "/paymentRequest/get?";
-    API_PAYDKEY = "deviceKey=";
-    API_PAYREQC = "&requestCode=";
-    APPLICATION = "application/json";
-
-    apiData = params.getAuthData();
 }
 
 String Request::makePayment(String json) {
+    apiData = params.getAuthData();
+
     HTTPClient http;
 
     String endpoint = String(SERVER_URL + SERVER_API + apiData[VERSION] + API_PAYMENT);
@@ -30,17 +20,17 @@ String Request::makePayment(String json) {
         
         addHeaders(http);
 
-        httpCode = http.POST(json);
+        int httpResponse = http.POST(json);
 
-        if (httpCode == 200) {
+        if (httpResponse == 200) {
             response = http.getString();
             Printer::toSerialSL("[ANSWR] ");
-            Printer::toSerialNL(String(httpCode));
+            Printer::toSerialNL(String(httpResponse));
         }
         else {
             response = http.getString();
             Printer::toSerialSL("[ERORR] ");
-            Printer::toSerialNL(String(httpCode));
+            Printer::toSerialNL(String(httpResponse));
             Printer::toSerialNL(response);
             LEVEL = RunLevel::ERROR;
         }
@@ -49,7 +39,38 @@ String Request::makePayment(String json) {
     return response;
 }
 
-String Request::checkPayment(String json) {
+String Request::checkPayment(String code) {
+    apiData = params.getAuthData();
+    deviceID = apiData[DEVICEID];
+
+    HTTPClient http;
+
+    String endpoint = String(SERVER_URL + SERVER_API + apiData[VERSION]
+                    + API_REQUEST + API_PAYDKEY + apiData[DEVICEID] + API_PAYREQC + code);
+
+    if(WiFi.status()== WL_CONNECTED){
+        http.begin(endpoint.c_str());
+        
+        addHeaders(http);
+
+        int httpResponse = http.GET();
+
+        if (httpResponse == 200) {
+            response = http.getString();
+            Printer::toSerialSL("[ANSWR] ");
+            Printer::toSerialNL(String(httpResponse));
+            Printer::toSerialNL(response);
+        }
+        else {
+            response = http.getString();
+            Printer::toSerialSL("[ERORR] ");
+            Printer::toSerialNL(String(httpResponse));
+            Printer::toSerialNL(response);
+            LEVEL = RunLevel::ERROR;
+        }
+        http.end();
+    }
+
     return response;
 }
 

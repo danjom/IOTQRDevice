@@ -3,6 +3,7 @@
 #include <Numbers.h>
 #include <Request.h>
 #include <ArduinoJson.h>
+#include <Timer.h>
 
 #ifndef PAYMENT_H
 #define PAYMENT_H
@@ -25,8 +26,6 @@ class Payment {
         void showRecent();
         
         void makePayment();
-        void sendPayment();
-        void checkPayment();
 
         void paymentPayload();
         void paymentRequest();
@@ -38,12 +37,15 @@ class Payment {
 
         Numbers numbers;
         Request request;
+        Timer apiTimeout;
+
         String jsonData;
         String response;
         String deviceID;
 
         String message;
         String paycode;
+        String complete;
 
         PayCode codeType;
 
@@ -51,6 +53,7 @@ class Payment {
         int server;
         int status;
         char input;
+        unsigned long TIMEOUT;
         
 };
 

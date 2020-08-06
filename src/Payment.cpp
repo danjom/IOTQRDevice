@@ -1,9 +1,10 @@
 #include <Payment.h>
 
 Payment::Payment() {
-    request.begin();
+    TIMEOUT = 300000;
     message = "";
     paycode = "";
+    apiTimeout.setTimer(TIMEOUT);
 }
 
 void Payment::start(PayCode type) {
@@ -37,13 +38,12 @@ void Payment::purchase() {
 void Payment::makePayment() {
     paymentPayload();
     paymentRequest();
+    paymentVerify();
 
-    if (LEVEL != RunLevel::ERROR) {
-        paymentResponse();
-        paymentVerify();
-    }
-    else {
-        LEVEL = RunLevel::MENU;
+    if (LEVEL == RunLevel::ERROR) {
+        Printer::toSerialNL("Payment request failed or rejected");
+        delay(5000);
+        LEVEL = RunLevel::MENU;   
     }
 }
 
@@ -62,9 +62,7 @@ void Payment::paymentPayload() {
 
 void Payment::paymentRequest() {
     response = request.makePayment(jsonData);
-}
 
-void Payment::paymentResponse() {
     DynamicJsonBuffer jsonBuffer;
     JsonObject& root = jsonBuffer.parseObject(response);
 
@@ -82,11 +80,36 @@ void Payment::paymentResponse() {
 }
 
 void Payment::paymentVerify() {
+    bool paymentCheck = true;
+    apiTimeout.reset();
 
+    while (paymentCheck) {
+        paymentResponse();
+
+        if (complete == "true") {
+            paymentCheck = false;
+            Printer::toSerialNL("Payment accepted");
+        }
+        if (apiTimeout.check()) {
+            paymentCheck = false;
+            Printer::toSerialNL("Payment timed out");
+        }
+        delay(1000);
+    }
 }
 
-void Payment::checkPayment() {
+void Payment::paymentResponse() {
+    response = request.checkPayment(paycode);
 
+    DynamicJsonBuffer jsonBuffer;
+    JsonObject& root = jsonBuffer.parseObject(response);
+
+    String accepted = root["paymentCompleted"];
+
+    complete = accepted;
+
+    Printer::toSerialSL("Payment completed: "); 
+    Printer::toSerialNL(complete);
 }
 
 void Payment::exchange() {

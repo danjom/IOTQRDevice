@@ -10,27 +10,17 @@ extern APIData params;
 class Request {
     public:
         Request();
-        void begin();
         String makePayment(String json);
         String checkPayment(String json);
-        String showRecentLog(String json);
+        String showRecentLog(String key);
     private:
         void addHeaders(HTTPClient &http);
 
-        String SERVER_URL;
-        String SERVER_API;
-        String API_PAYMENT;
-        String API_REQUEST;
-        String API_PAYDKEY;
-        String API_PAYREQC;
-        String APPLICATION;
-
         String response;
         String payload;
+        String deviceID;
 
         String *apiData;
-
-        int httpCode;
 };
 
 #endif
