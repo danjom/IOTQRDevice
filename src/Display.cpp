@@ -5,13 +5,13 @@ const String CHAR = "\"";
 const String PAGE = "page ";
 const String FIELDS[] = {"QRCode.txt=", "Symbol.txt=", "Digits.txt="};
 
-void Display::changePage(int index) {
-    Serial.print(PAGE + index);
+void Display::changePage(Nextion page) {
+    Serial.print(PAGE + (int)page);
     writeEndBits();
 }
 
-void Display::changeData(int block, String data) {
-    Serial.print(FIELDS[block] + CHAR + data + CHAR);
+void Display::changeData(UIBlock block, String data) {
+    Serial.print(FIELDS[(int)block] + CHAR + data + CHAR);
     writeEndBits();
 }
 

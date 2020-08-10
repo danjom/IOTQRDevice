@@ -1,8 +1,6 @@
 #include <Project.h>
 #include <SPIFFS.h>
 
-extern Printer printer;
-
 #ifndef MEMORY_H
 #define MEMORY_H
 

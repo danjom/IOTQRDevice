@@ -1,6 +1,5 @@
 #include <Project.h>
 #include <APIData.h>
-#include <Display.h>
 #include <Signals.h>
 #include <Blinker.h>
 #include <Control.h>
@@ -9,6 +8,7 @@ APIData params;
 Display display;
 Signals signal;
 Blinker blinker;
+KeyScan scanner;
 
 Control control;
 

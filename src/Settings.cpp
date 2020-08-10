@@ -15,7 +15,7 @@ void Settings::begin() {
 
     if (DEVICE_RESET) {
         storage.write(RUN_PATH, String(RESET));
-        printer.toSerialNL("Restart device manually");
+        Printer::toSerialNL("Restart device manually");
     }
     else {
         checkState();
@@ -28,27 +28,27 @@ void Settings::checkState() {
 
     switch (state) {
     case RESET:
-        printer.toSerialNL("Run level: RESET");
+        Printer::toSerialNL("Run level: RESET");
         resetSettings();
         break;
     
     case LOGIN:
-        printer.toSerialNL("Run level: LOGIN");
+        Printer::toSerialNL("Run level: LOGIN");
         setPassword();
         break;
 
     case NETWORK:
-        printer.toSerialNL("Run level: NETWORK");
+        Printer::toSerialNL("Run level: NETWORK");
         setSettings();
         break;
 
     case VERIFY:
-        printer.toSerialNL("Run level: VERIFY");
+        Printer::toSerialNL("Run level: VERIFY");
         readSettings();
         break;
 
     default:
-        printer.toSerialNL("Wrong reading from state");
+        Printer::toSerialNL("Wrong reading from state");
         break;
     }
 }
@@ -93,18 +93,18 @@ void Settings::readSettings() {
     uint8_t charIndex = 0;
 
     if (reading.length() > 0) {
-        printer.toSerialNL("Network settings found");
+        Printer::toSerialNL("Network settings found");
 
         for (int index = 0; index < 8; index++) {
             charIndex = reading.indexOf(SEPARATOR);
             variables[index] = reading.substring(0, charIndex);
             reading.remove(0, charIndex + 1);
-            printer.toSerialNL(String("Var at " + String(index) + ": " + variables[index]));
+            Printer::toSerialNL(String("Var at " + String(index) + ": " + variables[index]));
         }
     params.saveSettings(variables);
     }
     else {
-        printer.toSerialNL("Network settings not found");
+        Printer::toSerialNL("Network settings not found");
     }
 }
 
@@ -112,11 +112,11 @@ void Settings::readPassword() {
     password = storage.read(PWD_PATH);
 
     if (password.length() > 0) {
-        printer.toSerialNL("Device settings found");
-        printer.toSerialNL(String("Device password is " + password));
+        Printer::toSerialNL("Device settings found");
+        Printer::toSerialNL(String("Device password is " + password));
     }
     else {
-        printer.toSerialNL("Device settings not found");
+        Printer::toSerialNL("Device settings not found");
     }
 }
 
@@ -130,12 +130,12 @@ void Settings::writeSettings(String sets) {
 
 void Settings::clearPassword() {
     storage.clear(PWD_PATH);
-    printer.toSerialNL("Device settings cleared");
+    Printer::toSerialNL("Device settings cleared");
 }
 
 void Settings::clearSettings() {
     storage.clear(CFG_PATH);
-    printer.toSerialNL("Network settings cleared");
+    Printer::toSerialNL("Network settings cleared");
 }
 
 void Settings::resetSettings() {
@@ -146,7 +146,7 @@ void Settings::resetSettings() {
 }
 
 void Settings::restartDevice() {
-    printer.toSerialNL("Restarting device . . .");
+    Printer::toSerialNL("Restarting device . . .");
     delay(3000);
     ESP.restart();
 }

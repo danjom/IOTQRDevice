@@ -53,7 +53,7 @@ void Control::runSetup() {
 void Control::showMenu() {
     Printer::toSerialNL("Waiting for key");
     //signal.display(READY);
-    display.changePage(OPTIONS);
+    display.changePage(Nextion::OPTIONS);
 
     LEVEL = RunLevel::SCAN;
 
@@ -67,7 +67,7 @@ void Control::getInput() {
     input = scanner.getKey();
 
     if (input) {
-        Printer::toSerialSL("Input is: ");
+        Printer::toSerialSL("Menu option is: ");
         Printer::toSerialNL(String(input));
 
         LEVEL = RunLevel::SELECT;
@@ -101,18 +101,12 @@ void Control::select() {
 }
 
 void Control::process() {
-    Printer::toSerialSL("Payment selected");
-    request.begin();
-    request.makePayment(5000);
-
+    Printer::toSerialNL("Payment selected");
+    payment.start(paycode);
     LEVEL = RunLevel::READY;
 }
 
 void Control::test() {
     Printer::toSerialNL("Status check");
     apitest.begin();
-
-    Printer::toSerialNL("Payment test");
-    request.begin();
-    request.makePayment(5000);
 }
