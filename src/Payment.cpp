@@ -4,6 +4,9 @@ Payment::Payment() {
     TIMEOUT = 30000;    // 0.5 min
     //TIMEOUT = 60000;  // 1 min
     //TIMEOUT = 300000; // 5 min
+}
+
+void Payment::setup() {
     apiTimeout.setTimer(TIMEOUT);
     deviceID = params.getAuthData()[DEVICEID];
 }

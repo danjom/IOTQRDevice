@@ -33,10 +33,10 @@ class Settings {
         void writePassword(String pass);
         void writeSettings(String sets);
         
-        enum RunLevel {RESET, LOGIN, NETWORK, VERIFY, READY};
-        RunLevel states[5] = {RESET, LOGIN, NETWORK, VERIFY, READY};
+        enum RunState {RESET, LOGIN, NETWORK, VERIFY, READY};
+        RunState states[5] = {RESET, LOGIN, NETWORK, VERIFY, READY};
 
-        RunLevel state;
+        RunState state;
         Memory storage;
         Network network; 
         

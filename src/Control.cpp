@@ -37,12 +37,16 @@ void Control::check() {
         Printer::toSerialNL("System is ready");
         LEVEL = RunLevel::MENU;
     }
+    else if (LEVEL == RunLevel::HALT) {
+        
+    }
 }
 
 void Control::runSetup() {
     settings.begin();
     network.connect();
     apitest.begin();
+    payment.setup();
     
     LEVEL = RunLevel::MENU;
 

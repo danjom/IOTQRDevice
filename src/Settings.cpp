@@ -17,6 +17,7 @@ void Settings::begin() {
     if (DEVICE_RESET) {
         storage.write(RUN_PATH, String(RESET));
         Printer::toSerialNL("Restart device manually");
+        LEVEL = RunLevel::HALT;
     }
     else {
         checkState();

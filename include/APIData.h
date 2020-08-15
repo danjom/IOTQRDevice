@@ -4,7 +4,7 @@
 #define APIDATA_H
 
 enum WiFiData {SSID, PASS};
-enum AuthData {DEVICEID, GROUPXDS, APILOGIN, VERSION, CURRENCY, LANGUAGE};
+enum AuthData {DEVICEID, GROUPXDS, APILOGIN, VERSION, LANGUAGE, CURRENCY};
 
 class APIData {
     public:

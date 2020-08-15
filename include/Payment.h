@@ -17,6 +17,7 @@ class Payment {
 
     public:
         Payment();
+        void setup();
         void start(PayCode type);
     private:
         void select();
