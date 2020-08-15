@@ -67,17 +67,17 @@ void Numbers::handlerAdd() {
 
 void Numbers::handlerDot() {
     digits.addDecimal();
-    display.changeData(UIBlock::DIGITS, digits.getField());
+    display.changeBlock(UIBlock::DIGITS, digits.getField());
 }
 
 void Numbers::handlerTrim() {
     digits.trimValue();
-    display.changeData(UIBlock::DIGITS, digits.getField());
+    display.changeBlock(UIBlock::DIGITS, digits.getField());
 }
 
 void Numbers::handlerPay() {
     amount = digits.getValue();
-    display.changeData(UIBlock::DIGITS, String(digits.getValue()));
+    display.changeBlock(UIBlock::DIGITS, String(digits.getValue()));
     digits.clearValue();
     status = READY;
 }
@@ -85,7 +85,7 @@ void Numbers::handlerPay() {
 void Numbers::handlerKey() {
     // LED -> Alert
     digits.clearValue();
-    display.changeData(UIBlock::DIGITS, digits.getField());
+    display.changeBlock(UIBlock::DIGITS, digits.getField());
 }
 
 void Numbers::handlerLED() {

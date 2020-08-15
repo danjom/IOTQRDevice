@@ -2,8 +2,7 @@
 
 #include <Display.h>
 #include <KeyScan.h>
-#include <Signals.h>
-#include <Blinker.h>
+#include <LEDTest.h>
 
 #include <APIData.h>
 #include <Settings.h>
@@ -19,6 +18,7 @@ extern APIData params;
 extern Display display;
 extern Signals signal;
 extern Blinker blinker;
+extern LEDTest ledtest;
 
 class Control {
     public:

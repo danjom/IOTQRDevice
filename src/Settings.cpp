@@ -4,10 +4,11 @@ const byte STATE_STORE = 0;
 const char SEPARATOR = ',';
 const String RUN_PATH = "/runlevel.txt";
 const String PWD_PATH = "/devauth.txt";
-const String CFG_PATH = "/settings.txt"; 
+const String CFG_PATH = "/settings.txt";
+const String LANG_PATH = "/strings.json";
 
 Settings::Settings() {
-
+    labels = 9;
 }
 
 void Settings::begin() {
@@ -45,6 +46,8 @@ void Settings::checkState() {
     case VERIFY:
         Printer::toSerialNL("Run level: VERIFY");
         readSettings();
+        getLanguage();
+        setLanguage();
         break;
 
     default:
@@ -88,7 +91,6 @@ void Settings::setSettings() {
 }
 
 void Settings::readSettings() {
-    String variables[8];
     String reading = storage.read(CFG_PATH);
     uint8_t charIndex = 0;
 
@@ -149,4 +151,38 @@ void Settings::restartDevice() {
     Printer::toSerialNL("Restarting device . . .");
     delay(3000);
     ESP.restart();
+}
+
+void Settings::getLanguage() {
+    String langCode = variables[6];
+    Printer::toSerialSL("LangCode: ");
+    Printer::toSerialNL(langCode);
+
+    if (langCode.equals("es-MX")) {
+        language = "Spanish";
+    }
+    else if (langCode.equals("en-US")) {
+        language = "English";
+    }
+}
+
+void Settings::setLanguage() {
+    String langData = storage.read(LANG_PATH);
+    Printer::toSerialNL(langData);
+    Printer::toSerialSL("Language: ");
+    Printer::toSerialNL(language);
+
+    DynamicJsonDocument doc(1024);
+    DeserializationError error = deserializeJson(doc, langData);
+
+    if (error) {
+        Serial.print(F("Lang Json failed: "));
+        Serial.println(error.c_str());
+        return;
+    }
+
+    for (int index = 0; index < labels; index++) {
+        Printer::toSerialNL(doc[language][index]);
+        display.changeField(index, doc[language][index]);
+    }
 }

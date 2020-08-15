@@ -2,26 +2,28 @@
 
 void Signals::display(int id) {
     switch (id) {
-    case CORRECT:
-        correct();
+        case CORRECT:
+            correct();
         break;
 
-    case AwAIT:
-        waiting();
+        case AwAIT:
+            waiting();
         break;
 
-    case REJECT:
-        refused();
+        case REJECT:
+            refused();
         break;
 
-    case WRONG:
-        invalid();
+        case WRONG:
+            invalid();
         break;
 
-    case READY:
-        started();
+        case READY:
+            started();
         break;
     }
+    blinker.display();
+    delay(1000);
 }
 
 void Signals::correct() {

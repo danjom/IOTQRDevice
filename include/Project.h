@@ -12,5 +12,4 @@ extern RunLevel LEVEL;
 extern Display display;
 extern KeyScan scanner;
 
-
 #endif

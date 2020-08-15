@@ -32,8 +32,7 @@ class Payment {
         void paymentResponse();
         void paymentVerify();
 
-        void getResponse();
-        void getHTTPCode();
+        void setCurrency(uint8_t type);
 
         Numbers numbers;
         Request request;
@@ -50,6 +49,7 @@ class Payment {
         PayCode codeType;
 
         float amount;
+        int currency;
         int server;
         int status;
         char input;

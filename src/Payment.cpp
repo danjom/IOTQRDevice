@@ -1,16 +1,28 @@
 #include <Payment.h>
 
 Payment::Payment() {
-    TIMEOUT = 300000;
-    message = "";
-    paycode = "";
+    TIMEOUT = 30000;    // 0.5 min
+    //TIMEOUT = 60000;  // 1 min
+    //TIMEOUT = 300000; // 5 min
     apiTimeout.setTimer(TIMEOUT);
+    deviceID = params.getAuthData()[DEVICEID];
+}
+
+void Payment::setCurrency(uint8_t type) {
+    currency = type;
 }
 
 void Payment::start(PayCode type) {
+    codeType = type;
+
+    message = "";
+    paycode = "";
+    complete = "";
+
     amount = 0;
     jsonData = "";
-    codeType = type;
+    response = "";
+
     select();
 }
 
@@ -48,35 +60,47 @@ void Payment::makePayment() {
 }
 
 void Payment::paymentPayload() {
-    deviceID = params.getAuthData()[DEVICEID];
+    //deviceID = params.getAuthData()[DEVICEID];
 
-    StaticJsonBuffer<200> jsonBuffer;
-    JsonObject& root = jsonBuffer.createObject();
+    //StaticJsonBuffer<200> jsonBuffer;
+    //JsonObject& root = jsonBuffer.createObject();
 
-    root["deviceKey"] = deviceID;
-    root["amount"] = amount;
-    root["currencyType"] = 1;
+    DynamicJsonDocument doc(512);
 
-    root.printTo(jsonData);
+    doc["deviceKey"] = deviceID;
+    doc["amount"] = amount;
+    doc["currencyType"] = 1;
+
+    serializeJson(doc, jsonData);
+    //root.printTo(jsonData);
 }
 
 void Payment::paymentRequest() {
     response = request.makePayment(jsonData);
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& root = jsonBuffer.parseObject(response);
+    //DynamicJsonBuffer jsonBuffer;
+    //JsonObject& root = jsonBuffer.parseObject(response);
 
-    String reqcode = root["requestCode"];
-    String msgshow = root["messageToDisplay"];
+    DynamicJsonDocument doc(1024);
+    DeserializationError error = deserializeJson(doc, response);
 
-    paycode = reqcode;
-    message = msgshow;
+    if (error) {
+        Serial.print(F("DeserializeJson() failed: Request"));
+        Serial.println(error.c_str());
+    }
+    else {
+        String reqcode = doc["requestCode"];
+        String msgshow = doc["messageToDisplay"];
 
-    Printer::toSerialSL("Request key: "); 
-    Printer::toSerialNL(paycode);
+        paycode = reqcode;
+        message = msgshow;
 
-    Printer::toSerialSL("Message: "); 
-    Printer::toSerialNL(message);
+        Printer::toSerialSL("Request key: "); 
+        Printer::toSerialNL(paycode);
+
+        Printer::toSerialSL("Message: "); 
+        Printer::toSerialNL(message);
+    }
 }
 
 void Payment::paymentVerify() {
@@ -84,14 +108,21 @@ void Payment::paymentVerify() {
     apiTimeout.reset();
 
     while (paymentCheck) {
-        paymentResponse();
+        if (LEVEL == RunLevel::ERROR) {
+            paymentCheck = false;
+        }
+        else {
+            paymentResponse();
+        }
 
         if (complete == "true") {
             paymentCheck = false;
             Printer::toSerialNL("Payment accepted");
         }
+
         if (apiTimeout.check()) {
             paymentCheck = false;
+            LEVEL = RunLevel::ERROR;
             Printer::toSerialNL("Payment timed out");
         }
         delay(1000);
@@ -101,10 +132,18 @@ void Payment::paymentVerify() {
 void Payment::paymentResponse() {
     response = request.checkPayment(paycode);
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonObject& root = jsonBuffer.parseObject(response);
+    // DynamicJsonBuffer jsonBuffer;
+    // JsonObject& root = jsonBuffer.parseObject(response);
 
-    String accepted = root["paymentCompleted"];
+    DynamicJsonDocument doc(1024);
+    DeserializationError error = deserializeJson(doc, response);
+
+    if (error) {
+        Serial.print(F("deserializeJson() failed: "));
+        Serial.println(error.c_str());
+    }
+
+    String accepted = doc["paymentCompleted"];
 
     complete = accepted;
 
@@ -117,5 +156,5 @@ void Payment::exchange() {
 }
 
 void Payment::showRecent() {
-
+    
 }

@@ -11,5 +11,4 @@ String API_PAYDKEY = "deviceKey=";
 String API_PAYREQC = "&requestCode=";
 String APPLICATION = "application/json";
 
-
 #endif

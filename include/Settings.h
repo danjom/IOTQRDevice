@@ -2,6 +2,7 @@
 #include <APIData.h>
 #include <Memory.h>
 #include <Network.h>
+#include <ArduinoJson.h>
 
 #ifndef SETTINGS_H
 #define SETTINGS_H
@@ -24,12 +25,13 @@ class Settings {
         void clearSettings();
         void resetSettings();
         void restartDevice();
-
+    private:
+        void getLanguage();
+        void setLanguage();
+        void getCurrency();
+        void checkReading(String msg);
         void writePassword(String pass);
         void writeSettings(String sets);
-
-    private:
-        void checkReading(String msg);
         
         enum RunLevel {RESET, LOGIN, NETWORK, VERIFY, READY};
         RunLevel states[5] = {RESET, LOGIN, NETWORK, VERIFY, READY};
@@ -40,6 +42,11 @@ class Settings {
         
         String password;
         String settings;
+        String language;
+        String variables[8];
+
+        int labels;
+        uint8_t currency;
 };
 
 #endif

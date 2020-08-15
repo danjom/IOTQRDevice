@@ -6,14 +6,14 @@ Control::Control() {
 
 void Control::begin() {
     Printer::toSerialNL("\nProgram Started\n");
-
+    display.changePage(Nextion::START);
     scanner.setDebounceTime(50);
     blinker.begin(22, 500, 500);
     blinker.setColor(ORANGE);
     blinker.setLevel(125);
     blinker.display();
-    blinker.turnLedOn();
-
+    blinker.display();
+    
     runSetup();
 }
 
@@ -51,8 +51,8 @@ void Control::runSetup() {
 }
 
 void Control::showMenu() {
+    ledtest.begin();
     Printer::toSerialNL("Waiting for key");
-    //signal.display(READY);
     display.changePage(Nextion::OPTIONS);
 
     LEVEL = RunLevel::SCAN;
@@ -67,7 +67,7 @@ void Control::getInput() {
     input = scanner.getKey();
 
     if (input) {
-        Printer::toSerialSL("Menu option is: ");
+        Printer::toSerialSL("Input is: ");
         Printer::toSerialNL(String(input));
 
         LEVEL = RunLevel::SELECT;
@@ -91,8 +91,6 @@ void Control::select() {
             break;
         
         default:
-            //signal.display(WRONG);
-            //signal.display(READY);
             Printer::toSerialNL("Invalid option");
 
             LEVEL = RunLevel::SCAN;
