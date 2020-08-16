@@ -12,7 +12,6 @@ Signals signal;
 Blinker blinker;
 KeyScan scanner;
 LEDTest ledtest;
-
 Control control;
 
 RunLevel LEVEL = RunLevel::READY;
@@ -22,6 +21,7 @@ bool DEVICE_RESET = false;
 
 void setup() {
   delay(250);
+  
   Serial.begin(9600);
   control.begin();
 }

@@ -5,9 +5,9 @@
 #include <LEDTest.h>
 
 #include <APIData.h>
+#include <Button.h>
 #include <Settings.h>
 #include <Connect.h>
-#include <APITest.h>
 #include <Request.h>
 #include <Payment.h>
 
@@ -25,11 +25,11 @@ class Control {
         Control();
         void begin();
         void check();
-        void test();
 
     private:
         void runSetup();
         void getInput();
+        void checkRST();
         void showMenu();
         void select();
         void process();
@@ -38,8 +38,7 @@ class Control {
         Connect network;
         Payment payment;
         PayCode paycode;
-        APITest apitest;
-        //Request request;
+        Button button;
         
         char input;
         

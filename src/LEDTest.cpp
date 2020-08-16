@@ -1,9 +1,9 @@
 #define LED_PIN 23
 #define LED_NUM 1
 #define FASTLED_ALLOW_INTERRUPTS 0
+#define FASTLED_INTERNAL
 
 #include <LEDTest.h>
-
 
 LEDTest::LEDTest() {
     FastLED.addLeds<WS2812, LED_PIN, RGB>(leds, LED_NUM);

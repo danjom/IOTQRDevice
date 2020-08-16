@@ -26,6 +26,7 @@ void Control::check() {
     }
     else if (LEVEL == RunLevel::SCAN) {
         getInput();
+        checkRST();
     }
     else if (LEVEL == RunLevel::SELECT) {
         select();
@@ -38,20 +39,16 @@ void Control::check() {
         LEVEL = RunLevel::MENU;
     }
     else if (LEVEL == RunLevel::HALT) {
-        
+        checkRST();
     }
 }
 
 void Control::runSetup() {
     settings.begin();
     network.connect();
-    apitest.begin();
     payment.setup();
     
     LEVEL = RunLevel::MENU;
-
-    //Test payment before menu
-    //LEVEL = RunLevel::PAYMENT;
 }
 
 void Control::showMenu() {
@@ -60,9 +57,6 @@ void Control::showMenu() {
     display.changePage(Nextion::OPTIONS);
 
     LEVEL = RunLevel::SCAN;
-
-    //Test payment before key scan
-    //LEVEL = RunLevel::PAYMENT;
 }
 
 void Control::getInput() {
@@ -108,7 +102,16 @@ void Control::process() {
     LEVEL = RunLevel::READY;
 }
 
-void Control::test() {
-    Printer::toSerialNL("Status check");
-    apitest.begin();
+void Control::checkRST() {
+    BtnPress state = button.check();
+
+    if (state == BtnPress::PRESS) {
+        Printer::toSerialNL("Device restart");
+        ESP.restart();
+
+    }
+    if (state == BtnPress::HOLD) {
+        Printer::toSerialNL("Settings reset");
+        settings.resetSettings();
+    }
 }

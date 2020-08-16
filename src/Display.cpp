@@ -1,4 +1,7 @@
 #include <Display.h>
+#define RX 26
+#define TX 27
+#define BAUDS 9600
 
 const String TEXT = ".txt=";
 const String CHAR = "\""; 
@@ -11,7 +14,7 @@ const String FIELDS[] = {"Options.Option1", "Options.Option2" , "Options.Option3
 HardwareSerial Screen(1);
 
 Display::Display() {
-    Screen.begin(9600, SERIAL_8N1, 26, 27);
+    Screen.begin(BAUDS, SERIAL_8N1, RX, TX);
 }
 
 void Display::changePage(Nextion page) {

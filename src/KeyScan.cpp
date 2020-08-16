@@ -12,6 +12,7 @@ char hexaKeys[ROWS][COLS] = {
 };
 
 // for ESP32
+
 byte colPins[COLS] = {14, 12, 13}; // connect to the column pinouts of the keypad
 byte rowPins[ROWS] = {21, 19, 18, 5}; // connect to the row pinouts of the keypad
 
